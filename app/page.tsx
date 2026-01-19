@@ -32,7 +32,7 @@ export default function Home() {
 
       {/* Main Content Container */}
       <div className="relative z-10" style={{backgroundColor: '#FAF9F6'}}>
-        <CarouselSection title="ILLUSTRATION" images={illustrationImages} onModalChange={setIsModalOpen} />
+        <CarouselSection id="illustration" title="ILLUSTRATION" images={illustrationImages} onModalChange={setIsModalOpen} />
         
         <InstagramFeed />
 

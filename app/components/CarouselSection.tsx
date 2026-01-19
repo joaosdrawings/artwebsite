@@ -3,12 +3,13 @@
 import { useRef, useState, useEffect, useCallback } from 'react';
 
 interface CarouselSectionProps {
+  id?: string;
   title: string;
   images: string[]; // placeholder URLs or just count
   onModalChange?: (isOpen: boolean) => void;
 }
 
-export default function CarouselSection({ title, images, onModalChange }: CarouselSectionProps) {
+export default function CarouselSection({ id, title, images, onModalChange }: CarouselSectionProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
@@ -158,7 +159,7 @@ export default function CarouselSection({ title, images, onModalChange }: Carous
   };
 
   return (
-    <section className="py-16 px-8">
+    <section id={id} className="py-16 px-8">
       <h2 className="text-3xl font-bold text-center mb-8">{title}</h2>
       <div className="relative max-w-6xl mx-auto">
         <button

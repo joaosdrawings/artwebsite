@@ -6,8 +6,10 @@ export default function ParallaxContent() {
   const containerRef = useRef<HTMLDivElement>(null);
   const backgroundRef = useRef<HTMLDivElement>(null);
   const foregroundRef = useRef<HTMLDivElement>(null);
+  const arrowRef = useRef<HTMLDivElement>(null);
   const [backgroundLoaded, setBackgroundLoaded] = useState(false);
   const [foregroundLoaded, setForegroundLoaded] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     // Check if images are already loaded (cached)
@@ -17,6 +19,14 @@ export default function ParallaxContent() {
     if (foregroundRef.current?.querySelector('img')?.complete) {
       setForegroundLoaded(true);
     }
+
+    // Check screen size
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 1024);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
   useEffect(() => {
@@ -26,12 +36,19 @@ export default function ParallaxContent() {
         
         // Background scrolls slower (parallax effect) - scroll up
         if (backgroundRef.current) {
-          backgroundRef.current.style.transform = `translateY(${scrolled * -0.05}px)`;
+          backgroundRef.current.style.transform = `translateY(${scrolled * -0.03}px)`;
         }
         
         // Foreground scrolls faster - scroll up
         if (foregroundRef.current) {
-          foregroundRef.current.style.transform = `translateY(${scrolled * -0.1}px)`;
+          foregroundRef.current.style.transform = `translateY(${scrolled * -0.15}px)`;
+        }
+
+        // Fade out arrow based on scroll (start at 25% of viewport height)
+        if (arrowRef.current) {
+          const fadeStart = window.innerHeight * 0.25;
+          const opacity = Math.max(0, 1 - (scrolled / fadeStart));
+          arrowRef.current.style.opacity = opacity.toString();
         }
       }
     };
@@ -44,7 +61,7 @@ export default function ParallaxContent() {
     <div 
       ref={containerRef}
       className="relative overflow-hidden"
-      style={{ height: 'calc(100vh - 100px)' }}
+      style={{ height: 'calc(105vh - 100px)' }}
     >
       {/* Background layer - scrolls slower */}
       <div
@@ -62,7 +79,7 @@ export default function ParallaxContent() {
           style={{
             filter: backgroundLoaded ? 'blur(0px)' : 'blur(20px)',
             transition: 'filter 0.3s ease-out',
-            transform: 'scale(1.2) translateY(-100px)',
+            transform: isMobile ? 'scale(1.2) translateY(-80px)' : 'scale(1.2) translateY(-100px)',
             transformOrigin: 'top center'
           }}
           onLoad={() => setBackgroundLoaded(true)}
@@ -85,11 +102,34 @@ export default function ParallaxContent() {
           style={{
             filter: foregroundLoaded ? 'blur(0px)' : 'blur(20px)',
             transition: 'filter 0.3s ease-out',
-            transform: 'scale(1.3) translateY(-40px) translateX(30px)',
+            transform: isMobile ? 'scale(1.3) translateY(50px) translateX(20px)' : 'scale(1.3) translateY(-40px) translateX(30px)',
             transformOrigin: 'center center'
           }}
           onLoad={() => setForegroundLoaded(true)}
         />
+      </div>
+
+      {/* Scroll Down Arrow */}
+      <div
+        ref={arrowRef}
+        className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-40 cursor-pointer"
+        style={{
+          color: '#FF7E70',
+          transition: 'opacity 0.3s ease-out',
+          filter: 'drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3))'
+        }}
+        onClick={() => {
+          const illustrationSection = document.getElementById('illustration');
+          if (illustrationSection) {
+            illustrationSection.scrollIntoView({ behavior: 'smooth' });
+          }
+        }}
+      >
+        <div className="animate-bounce">
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
       </div>
     </div>
   );
