@@ -3,39 +3,36 @@
 import { useEffect, useRef, useState } from 'react';
 
 export default function ParallaxContent() {
-  const parallaxRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const imageRef = useRef<HTMLImageElement>(null);
-  const [arrowOpacity, setArrowOpacity] = useState(1);
-  const [imageLoaded, setImageLoaded] = useState(false);
+  const backgroundRef = useRef<HTMLDivElement>(null);
+  const foregroundRef = useRef<HTMLDivElement>(null);
+  const [backgroundLoaded, setBackgroundLoaded] = useState(false);
+  const [foregroundLoaded, setForegroundLoaded] = useState(false);
 
   useEffect(() => {
-    // Check if image is already loaded (cached)
-    if (imageRef.current?.complete) {
-      setImageLoaded(true);
+    // Check if images are already loaded (cached)
+    if (backgroundRef.current?.querySelector('img')?.complete) {
+      setBackgroundLoaded(true);
+    }
+    if (foregroundRef.current?.querySelector('img')?.complete) {
+      setForegroundLoaded(true);
     }
   }, []);
 
   useEffect(() => {
     const handleScroll = () => {
-      if (imageRef.current && containerRef.current) {
-        const containerRect = containerRef.current.getBoundingClientRect();
-        const containerTop = containerRect.top;
-        const containerHeight = containerRect.height;
-
-        // Only apply parallax when the container is in view
-        if (containerTop < window.innerHeight && containerTop + containerHeight > 0) {
-          const scrolled = window.pageYOffset;
-          const scale = 1 + (scrolled * 0.0005); // Subtle zoom
-          imageRef.current.style.transform = `scale(${scale})`;
-        }
-
-        // Calculate opacity based on scroll position
-        // At 50% of viewport height, opacity should be 0
-        const fadeThreshold = window.innerHeight * 0.5;
+      if (containerRef.current && backgroundRef.current && foregroundRef.current) {
         const scrolled = window.pageYOffset;
-        const opacity = Math.max(0, 1 - (scrolled / fadeThreshold));
-        setArrowOpacity(opacity);
+        
+        // Background scrolls slower (parallax effect) - scroll up
+        if (backgroundRef.current) {
+          backgroundRef.current.style.transform = `translateY(${scrolled * -0.05}px)`;
+        }
+        
+        // Foreground scrolls faster - scroll up
+        if (foregroundRef.current) {
+          foregroundRef.current.style.transform = `translateY(${scrolled * -0.1}px)`;
+        }
       }
     };
 
@@ -44,50 +41,55 @@ export default function ParallaxContent() {
   }, []);
 
   return (
-    <div ref={containerRef} className="relative overflow-hidden" style={{height: 'calc(100vh - 100px)'}}>
-      {/* Parallax background with image */}
-      <div 
-        ref={parallaxRef}
-        className="fixed inset-0 w-full h-full transition-transform duration-75 ease-out"
-        style={{ 
-          transformOrigin: 'center center'
+    <div 
+      ref={containerRef}
+      className="relative overflow-hidden"
+      style={{ height: 'calc(100vh - 100px)' }}
+    >
+      {/* Background layer - scrolls slower */}
+      <div
+        ref={backgroundRef}
+        className="fixed inset-0 w-full h-full"
+        style={{
+          willChange: 'transform',
+          zIndex: 0
         }}
       >
         <img
-          ref={imageRef}
-          src="/images/ryza.jpg"
+          src="/images/hero/background.PNG"
           alt="Hero background"
           className="w-full h-full object-cover object-top"
           style={{
-            filter: imageLoaded ? 'blur(0px)' : 'blur(20px)',
-            transition: 'filter 0.3s ease-out'
+            filter: backgroundLoaded ? 'blur(0px)' : 'blur(20px)',
+            transition: 'filter 0.3s ease-out',
+            transform: 'scale(1.2) translateY(-100px)',
+            transformOrigin: 'top center'
           }}
-          onLoad={() => setImageLoaded(true)}
+          onLoad={() => setBackgroundLoaded(true)}
         />
       </div>
-      
-      {/* Animated scroll indicator arrow */}
-      <div 
-        className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-10 transition-opacity duration-100"
-        style={{ opacity: arrowOpacity }}
+
+      {/* Foreground layer - scrolls faster */}
+      <div
+        ref={foregroundRef}
+        className="fixed inset-0 w-full h-full"
+        style={{
+          willChange: 'transform',
+          zIndex: 1
+        }}
       >
-        <div className="flex flex-col items-center animate-bounce">
-          <svg 
-            width="40" 
-            height="40" 
-            viewBox="0 0 24 24" 
-            fill="none" 
-            stroke="#FF7E70" 
-            strokeWidth="2" 
-            strokeLinecap="round" 
-            strokeLinejoin="round"
-            style={{
-              filter: 'drop-shadow(2px 2px 4px rgba(0,0,0,0.8))'
-            }}
-          >
-            <polyline points="6 9 12 15 18 9"></polyline>
-          </svg>
-        </div>
+        <img
+          src="/images/hero/foreground.PNG"
+          alt="Hero foreground"
+          className="w-full h-full object-cover object-top"
+          style={{
+            filter: foregroundLoaded ? 'blur(0px)' : 'blur(20px)',
+            transition: 'filter 0.3s ease-out',
+            transform: 'scale(1.3) translateY(-40px) translateX(30px)',
+            transformOrigin: 'center center'
+          }}
+          onLoad={() => setForegroundLoaded(true)}
+        />
       </div>
     </div>
   );
