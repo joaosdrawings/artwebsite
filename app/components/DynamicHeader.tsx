@@ -9,10 +9,12 @@ export default function DynamicHeader() {
   useEffect(() => {
     const handleScroll = () => {
       const scrolled = window.pageYOffset;
-      setIsScrolled(scrolled > 50);
+      const trigger = window.innerHeight * 0.75;
+      setIsScrolled(scrolled > trigger);
     };
 
     window.addEventListener('scroll', handleScroll);
+    handleScroll();
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 

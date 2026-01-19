@@ -20,12 +20,13 @@ export default function InstagramFeed() {
       <div className="max-w-6xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {posts.map((postId) => (
-            <div key={postId} className="rounded-lg overflow-hidden" style={{backgroundColor: '#F0EAD6'}}>
+            <div key={postId} className="rounded-lg overflow-hidden" style={{backgroundColor: '#FFFFFF', height: '600px', display: 'flex', flexDirection: 'column'}}>
               <iframe
                 src={`https://www.instagram.com/p/${postId}/embed`}
                 className="w-full"
-                style={{ minHeight: '500px', border: 'none' }}
+                style={{ height: '100%', border: 'none', overflow: 'hidden' }}
                 allowFullScreen
+                scrolling="no"
               />
             </div>
           ))}

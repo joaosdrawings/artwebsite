@@ -30,30 +30,50 @@ export default function ParallaxContent() {
   }, []);
 
   useEffect(() => {
-    const handleScroll = () => {
-      if (containerRef.current && backgroundRef.current && foregroundRef.current) {
-        const scrolled = window.pageYOffset;
-        
-        // Background scrolls slower (parallax effect) - scroll up
-        if (backgroundRef.current) {
-          backgroundRef.current.style.transform = `translateY(${scrolled * -0.03}px)`;
-        }
-        
-        // Foreground scrolls faster - scroll up
-        if (foregroundRef.current) {
-          foregroundRef.current.style.transform = `translateY(${scrolled * -0.15}px)`;
-        }
+    let ticking = false;
+    let latestScroll = 0;
 
-        // Fade out arrow based on scroll (start at 25% of viewport height)
-        if (arrowRef.current) {
-          const fadeStart = window.innerHeight * 0.25;
-          const opacity = Math.max(0, 1 - (scrolled / fadeStart));
-          arrowRef.current.style.opacity = opacity.toString();
-        }
+    const updateOnScroll = () => {
+      ticking = false;
+      const scrolled = latestScroll;
+
+      // Background scrolls slower (parallax effect) - scroll up
+      if (backgroundRef.current) {
+        backgroundRef.current.style.transform = `translateY(${scrolled * -0.03}px)`;
+      }
+
+      // Foreground scrolls faster - scroll up
+      if (foregroundRef.current) {
+        foregroundRef.current.style.transform = `translateY(${scrolled * -0.15}px)`;
+      }
+
+      // Fade out hero based on scroll: start at 25% height, finish at 80%
+      if (containerRef.current) {
+        const heroHeight = window.innerHeight * 1.05 - 100;
+        const fadeStart = heroHeight * 0.25;
+        const fadeEnd = heroHeight * 0.8;
+        const progress = Math.min(1, Math.max(0, (scrolled - fadeStart) / (fadeEnd - fadeStart)));
+        const opacity = 1 - progress;
+        containerRef.current.style.opacity = opacity.toString();
+      }
+
+      // Fade out arrow based on scroll (start at 25% of viewport height)
+      if (arrowRef.current) {
+        const fadeStart = window.innerHeight * 0.25;
+        const opacity = Math.max(0, 1 - (scrolled / fadeStart));
+        arrowRef.current.style.opacity = opacity.toString();
       }
     };
 
-    window.addEventListener('scroll', handleScroll);
+    const handleScroll = () => {
+      latestScroll = window.pageYOffset;
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(updateOnScroll);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -66,8 +86,10 @@ export default function ParallaxContent() {
       {/* Background layer - scrolls slower */}
       <div
         ref={backgroundRef}
-        className="fixed inset-0 w-full h-full"
+        className="fixed left-0 right-0 w-full"
         style={{
+          top: 0,
+          height: '120vh',
           willChange: 'transform',
           zIndex: 0
         }}
@@ -77,9 +99,9 @@ export default function ParallaxContent() {
           alt="Hero background"
           className="w-full h-full object-cover object-top"
           style={{
-            filter: backgroundLoaded ? 'blur(0px)' : 'blur(20px)',
+            filter: backgroundLoaded ? 'blur(0px)' : 'blur(10px)',
             transition: 'filter 0.3s ease-out',
-            transform: isMobile ? 'scale(1.2) translateY(-80px)' : 'scale(1.2) translateY(-100px)',
+            transform: isMobile ? 'scale(1.1) translateY(-60px)' : 'scale(1.1) translateY(-80px)',
             transformOrigin: 'top center'
           }}
           onLoad={() => setBackgroundLoaded(true)}
@@ -89,8 +111,10 @@ export default function ParallaxContent() {
       {/* Foreground layer - scrolls faster */}
       <div
         ref={foregroundRef}
-        className="fixed inset-0 w-full h-full"
+        className="fixed left-0 right-0 w-full"
         style={{
+          top: 0,
+          height: '120vh',
           willChange: 'transform',
           zIndex: 1
         }}
@@ -100,9 +124,9 @@ export default function ParallaxContent() {
           alt="Hero foreground"
           className="w-full h-full object-cover object-top"
           style={{
-            filter: foregroundLoaded ? 'blur(0px)' : 'blur(20px)',
+            filter: foregroundLoaded ? 'blur(0px)' : 'blur(10px)',
             transition: 'filter 0.3s ease-out',
-            transform: isMobile ? 'scale(1.3) translateY(50px) translateX(20px)' : 'scale(1.3) translateY(-40px) translateX(30px)',
+            transform: isMobile ? 'scale(1.15) translateY(30px) translateX(12px)' : 'scale(1.15) translateY(-30px) translateX(20px)',
             transformOrigin: 'center center'
           }}
           onLoad={() => setForegroundLoaded(true)}

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect, useRef } from 'react';
 import CarouselSection from './components/CarouselSection';
 import ParallaxContent from './components/ParallaxContent';
 import DynamicHeader from './components/DynamicHeader';
@@ -9,6 +9,40 @@ import EventsSchedule from './components/EventsSchedule';
 
 export default function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const contentRef = useRef<HTMLDivElement>(null);
+  const scrollFrame = useRef<number | null>(null);
+  const latestScroll = useRef(0);
+
+  useEffect(() => {
+    const updateContentOpacity = () => {
+      scrollFrame.current = null;
+      const heroHeight = window.innerHeight * 1.05 - 100;
+      const fadeEndScroll = heroHeight * 0.8;
+      const opacity = Math.min(1, latestScroll.current / fadeEndScroll);
+      if (contentRef.current) {
+        contentRef.current.style.opacity = opacity.toString();
+        contentRef.current.style.pointerEvents = opacity < 0.5 ? 'none' : 'auto';
+      }
+    };
+
+    const handleScroll = () => {
+      latestScroll.current = window.pageYOffset;
+      if (scrollFrame.current === null) {
+        scrollFrame.current = window.requestAnimationFrame(updateContentOpacity);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    // Kick off initial calculation
+    handleScroll();
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      if (scrollFrame.current !== null) {
+        cancelAnimationFrame(scrollFrame.current);
+      }
+    };
+  }, []);
 
   const illustrationImages = useMemo(() => [
     '/images/Maka.JPG',
@@ -31,7 +65,17 @@ export default function Home() {
       <ParallaxContent />
 
       {/* Main Content Container */}
-      <div className="relative z-10" style={{backgroundColor: '#FAF9F6'}}>
+      <div 
+        ref={contentRef}
+        className="relative"
+        style={{
+          backgroundColor: 'transparent',
+          color: '#2C2C2C',
+          opacity: 0,
+          transition: 'opacity 0.1s ease-out',
+          pointerEvents: 'none'
+        }}
+      >
         <CarouselSection id="illustration" title="ILLUSTRATION" images={illustrationImages} onModalChange={setIsModalOpen} />
         
         <InstagramFeed />
@@ -46,12 +90,6 @@ export default function Home() {
           <p className="text-lg mb-8">
             A VTuber who streams art and more every Saturday on Twitch.
           </p>
-          <div className="flex space-x-4 mb-8">
-            <a href="#" className="text-blue-500">Twitter</a>
-            <a href="#" className="text-pink-500">Instagram</a>
-            <a href="#" className="text-purple-500">Twitch</a>
-            <a href="#" className="text-green-500">Patreon</a>
-          </div>
           <a href="#" style={{color: '#E64A4A'}}>・・ ALL LINKS</a>
         </section>
 
