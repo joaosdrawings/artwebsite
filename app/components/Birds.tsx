@@ -29,6 +29,10 @@ const Birds = forwardRef<HTMLDivElement>((props, ref) => {
       <div className="bird-container bird-container--four">
         <div className="bird bird--four"></div>
       </div>
+      
+      <div className="bird-container bird-container--five">
+        <div className="bird bird--five"></div>
+      </div>
 
       <style jsx>{`
         .bird {
@@ -45,23 +49,28 @@ const Birds = forwardRef<HTMLDivElement>((props, ref) => {
         }
 
         .bird--one {
+          animation-duration: 1.3s;
+          animation-delay: -0.2s;
+        }
+        
+        .bird--two {
+          animation-duration: 1.15s;
+          animation-delay: -0.6s;
+        }
+        
+        .bird--three {
           animation-duration: 1s;
           animation-delay: -0.5s;
         }
         
-        .bird--two {
-          animation-duration: 0.9s;
-          animation-delay: -0.75s;
-        }
-        
-        .bird--three {
+        .bird--four {
           animation-duration: 1.25s;
           animation-delay: -0.25s;
         }
         
-        .bird--four {
+        .bird--five {
           animation-duration: 1.1s;
-          animation-delay: -0.5s;
+          animation-delay: -0.4s;
         }
 
         .bird-container {
@@ -77,31 +86,38 @@ const Birds = forwardRef<HTMLDivElement>((props, ref) => {
         }
         
         .bird-container--one {
+          top: -18%;
+          animation-duration: 35s;
+          animation-delay: 5s;
+          animation-name: fly-right-tiny;
+        }
+        
+        .bird-container--two {
+          top: -15%;
+          animation-duration: 40s;
+          animation-delay: 15s;
+          animation-name: fly-right-tiny;
+        }
+        
+        .bird-container--three {
           top: 2%;
           animation-duration: 15s;
           animation-delay: 0;
           animation-name: fly-right-small;
         }
         
-        .bird-container--two {
-          top: 18%;
-          animation-duration: 12.8s;
-          animation-delay: 1s;
-          animation-name: fly-right-medium;
-        }
-        
-        .bird-container--three {
+        .bird-container--four {
           top: 5%;
           animation-duration: 20s;
           animation-delay: 9.5s;
           animation-name: fly-right-small;
         }
         
-        .bird-container--four {
-          top: 20%;
-          animation-duration: 6s;
-          animation-delay: 10.25s;
-          animation-name: fly-right-medium;
+        .bird-container--five {
+          top: -6%;
+          animation-duration: 27s;
+          animation-delay: 7s;
+          animation-name: fly-right-medium-small;
         }
 
         @keyframes fly-cycle {
@@ -112,69 +128,137 @@ const Birds = forwardRef<HTMLDivElement>((props, ref) => {
 
         @keyframes fly-right-small {
           0% {
-            transform: scale(0.15) translateX(-10vw);
+            transform: scale(0.15) translateX(-10vw) translateY(-5vh) rotate(15deg);
           }
           
           10% {
-            transform: translateY(2vh) translateX(10vw) scale(0.2);
+            transform: translateY(0vh) translateX(10vw) scale(0.2) rotate(15deg);
           }
           
           20% {
-            transform: translateY(0vh) translateX(30vw) scale(0.25);
+            transform: translateY(5vh) translateX(30vw) scale(0.25) rotate(15deg);
           }
           
           30% {
-            transform: translateY(4vh) translateX(50vw) scale(0.3);
+            transform: translateY(10vh) translateX(50vw) scale(0.3) rotate(15deg);
           }
           
           40% {
-            transform: translateY(2vh) translateX(70vw) scale(0.3);
+            transform: translateY(15vh) translateX(70vw) scale(0.3) rotate(15deg);
           }
           
           50% {
-            transform: translateY(0vh) translateX(90vw) scale(0.3);
+            transform: translateY(20vh) translateX(90vw) scale(0.3) rotate(15deg);
           }
           
           60% {
-            transform: translateY(0vh) translateX(110vw) scale(0.3);
+            transform: translateY(25vh) translateX(110vw) scale(0.3) rotate(15deg);
           }
           
           100% {
-            transform: translateY(0vh) translateX(110vw) scale(0.3);
+            transform: translateY(30vh) translateX(110vw) scale(0.3) rotate(15deg);
           }
         }
 
         @keyframes fly-right-medium {
           0% {
-            transform: scale(0.225) translateX(-10vw);
+            transform: scale(0.225) translateX(-10vw) translateY(-5vh) rotate(15deg);
           }
           
           10% {
-            transform: translateY(2vh) translateX(10vw) scale(0.3);
+            transform: translateY(0vh) translateX(10vw) scale(0.3) rotate(15deg);
           }
           
           20% {
-            transform: translateY(0vh) translateX(30vw) scale(0.375);
+            transform: translateY(5vh) translateX(30vw) scale(0.375) rotate(15deg);
           }
           
           30% {
-            transform: translateY(4vh) translateX(50vw) scale(0.45);
+            transform: translateY(10vh) translateX(50vw) scale(0.45) rotate(15deg);
           }
           
           40% {
-            transform: translateY(2vh) translateX(70vw) scale(0.45);
+            transform: translateY(15vh) translateX(70vw) scale(0.45) rotate(15deg);
           }
           
           50% {
-            transform: translateY(0vh) translateX(90vw) scale(0.45);
+            transform: translateY(20vh) translateX(90vw) scale(0.45) rotate(15deg);
           }
           
           60% {
-            transform: translateY(0vh) translateX(110vw) scale(0.45);
+            transform: translateY(25vh) translateX(110vw) scale(0.45) rotate(15deg);
           }
           
           100% {
-            transform: translateY(0vh) translateX(110vw) scale(0.45);
+            transform: translateY(30vh) translateX(110vw) scale(0.45) rotate(15deg);
+          }
+        }
+
+        @keyframes fly-right-tiny {
+          0% {
+            transform: scale(0.075) translateX(-10vw) translateY(-5vh) rotate(15deg);
+          }
+          
+          10% {
+            transform: translateY(0vh) translateX(10vw) scale(0.1) rotate(15deg);
+          }
+          
+          20% {
+            transform: translateY(5vh) translateX(30vw) scale(0.125) rotate(15deg);
+          }
+          
+          30% {
+            transform: translateY(10vh) translateX(50vw) scale(0.15) rotate(15deg);
+          }
+          
+          40% {
+            transform: translateY(15vh) translateX(70vw) scale(0.15) rotate(15deg);
+          }
+          
+          50% {
+            transform: translateY(20vh) translateX(90vw) scale(0.15) rotate(15deg);
+          }
+          
+          60% {
+            transform: translateY(25vh) translateX(110vw) scale(0.15) rotate(15deg);
+          }
+          
+          100% {
+            transform: translateY(30vh) translateX(110vw) scale(0.15) rotate(15deg);
+          }
+        }
+
+        @keyframes fly-right-medium-small {
+          0% {
+            transform: scale(0.11) translateX(-10vw) translateY(-5vh) rotate(15deg);
+          }
+          
+          10% {
+            transform: translateY(0vh) translateX(10vw) scale(0.15) rotate(15deg);
+          }
+          
+          20% {
+            transform: translateY(5vh) translateX(30vw) scale(0.19) rotate(15deg);
+          }
+          
+          30% {
+            transform: translateY(10vh) translateX(50vw) scale(0.225) rotate(15deg);
+          }
+          
+          40% {
+            transform: translateY(15vh) translateX(70vw) scale(0.225) rotate(15deg);
+          }
+          
+          50% {
+            transform: translateY(20vh) translateX(90vw) scale(0.225) rotate(15deg);
+          }
+          
+          60% {
+            transform: translateY(25vh) translateX(110vw) scale(0.225) rotate(15deg);
+          }
+          
+          100% {
+            transform: translateY(30vh) translateX(110vw) scale(0.225) rotate(15deg);
           }
         }
       `}</style>
