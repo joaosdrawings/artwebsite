@@ -1,6 +1,7 @@
 'use client';
 
 import { useRef, useState, useEffect, useCallback } from 'react';
+import AnimatedButton from './AnimatedButton';
 
 interface CarouselSectionProps {
   id?: string;
@@ -170,31 +171,42 @@ export default function CarouselSection({ id, title, images, onModalChange }: Ca
         </button>
         <div
           ref={scrollRef}
-          className="flex overflow-x-auto space-x-4 pb-4"
+          className="overflow-x-auto pb-4"
           style={{ 
             scrollSnapType: 'x mandatory',
             scrollbarWidth: 'none',
             msOverflowStyle: 'none',
-            scrollBehavior: 'smooth'
+            scrollBehavior: 'smooth',
+            WebkitOverflowScrolling: 'touch',
+            whiteSpace: 'nowrap'
           }}
         >
           {images.map((imageSrc, index) => (
             <div
               key={index}
-              className={`shrink-0 cursor-pointer ${imageSrc ? '' : colors[index % colors.length]}`}
-              style={{ scrollSnapAlign: 'start', height: '450px', width: 'auto' }}
+              className={`cursor-pointer ${imageSrc ? '' : colors[index % colors.length]}`}
+              style={{ 
+                scrollSnapAlign: 'start', 
+                height: '450px', 
+                display: 'inline-block',
+                verticalAlign: 'top',
+                marginRight: index < images.length - 1 ? '10px' : '0',
+                fontSize: 0
+              }}
               onClick={() => openModal(imageSrc || `/images/placeholder-${index + 1}.jpg`, index)}
             >
               {imageSrc && (
                 <img
                   src={imageSrc}
                   alt={`Illustration ${index + 1}`}
-                  className="w-full h-full object-contain"
-                  loading="lazy"
                   style={{
+                    height: '450px',
+                    width: 'auto',
+                    display: 'block',
                     filter: loadedThumbnails.has(index) ? 'blur(0px)' : 'blur(20px)',
                     transition: 'filter 0.3s ease-out'
                   }}
+                  loading="lazy"
                   onLoad={(e) => {
                     setLoadedThumbnails(prev => new Set(prev).add(index));
                     // Also check if already complete (cached)
@@ -215,9 +227,10 @@ export default function CarouselSection({ id, title, images, onModalChange }: Ca
         </button>
       </div>
       <div className="text-center mt-8">
-        <button className="text-white px-6 py-2 rounded-full transition-colors" style={{backgroundColor: '#FF7E70'}} onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#E64A4A'} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#FF7E70'}>
-          View Gallery
-        </button>
+        <AnimatedButton 
+          href="#gallery"
+          text="View Gallery"
+        />
       </div>
 
       {/* Modal */}

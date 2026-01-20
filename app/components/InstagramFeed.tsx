@@ -1,4 +1,5 @@
 'use client';
+import AnimatedButton from './AnimatedButton';
 
 export default function InstagramFeed() {
   const posts = [
@@ -11,7 +12,10 @@ export default function InstagramFeed() {
   ];
 
   return (
-    <section className="py-16 px-8" style={{background: 'linear-gradient(135deg, #FAF9F6 0%, #F0EAD6 50%, #FFE8D6 100%)'}}>
+    <section
+      className="py-16 px-8"
+      style={{ background: 'linear-gradient(135deg, #FAF9F6 0%, #F0EAD6 50%, #FFE8D6 100%)' }}
+    >
       <h2 className="text-3xl font-bold text-center mb-8">
         <a href="https://www.instagram.com/moitaartwork/" target="_blank" rel="noopener noreferrer" style={{color: '#FF7E70'}}>
           @moitaartwork
@@ -36,17 +40,10 @@ export default function InstagramFeed() {
           })}
         </div>
         <div className="text-center mt-8">
-          <a 
-            href="https://www.instagram.com/moitaartwork/" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="text-white px-6 py-2 rounded-full transition-colors inline-block" 
-            style={{backgroundColor: '#FF7E70'}}
-            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#E64A4A'}
-            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#FF7E70'}
-          >
-            View on Instagram
-          </a>
+          <AnimatedButton 
+            href="https://www.instagram.com/moitaartwork/"
+            text="View on Instagram"
+          />
         </div>
       </div>
     </section>
