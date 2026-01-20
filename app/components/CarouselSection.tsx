@@ -187,7 +187,6 @@ export default function CarouselSection({ id, title, images, onModalChange }: Ca
               className={`cursor-pointer ${imageSrc ? '' : colors[index % colors.length]}`}
               style={{ 
                 scrollSnapAlign: 'start', 
-                height: '450px', 
                 display: 'inline-block',
                 verticalAlign: 'top',
                 marginRight: index < images.length - 1 ? '10px' : '0',
@@ -202,7 +201,10 @@ export default function CarouselSection({ id, title, images, onModalChange }: Ca
                   style={{
                     height: '450px',
                     width: 'auto',
+                    minWidth: 'auto',
+                    maxWidth: 'none',
                     display: 'block',
+                    objectFit: 'contain',
                     filter: loadedThumbnails.has(index) ? 'blur(0px)' : 'blur(20px)',
                     transition: 'filter 0.3s ease-out'
                   }}
