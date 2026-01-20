@@ -77,13 +77,13 @@ export default function EventsSchedule() {
   ];
 
   return (
-    <section className="py-16 px-8 max-w-6xl mx-auto">
+    <section id="events" className="py-16 px-8 max-w-6xl mx-auto">
       <h2 className="text-3xl font-bold mb-8 flex items-center">
         <span className="mr-2" style={{color: '#FF7E70'}}>•</span> Events Schedule
       </h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {schedule.map((monthData) => (
-          <div key={monthData.month} className="rounded-lg p-6" style={{backgroundColor: '#F0EAD6'}}>
+          <div key={monthData.month} className="p-6" style={{border: '2px solid #FF7E70', borderRadius: '8px'}}>
             <h3 className="text-xl font-bold mb-4" style={{color: '#FF7E70'}}>{monthData.month}</h3>
             {monthData.events.length > 0 ? (
               <div className="space-y-3">

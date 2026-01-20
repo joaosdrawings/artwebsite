@@ -116,7 +116,7 @@ export default function ParallaxContent() {
           top: 0,
           height: '120vh',
           willChange: 'transform',
-          zIndex: 1
+          zIndex: 2
         }}
       >
         <img
