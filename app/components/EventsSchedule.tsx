@@ -78,9 +78,14 @@ export default function EventsSchedule() {
 
   return (
     <section id="events" className="py-16 px-8 max-w-6xl mx-auto">
-      <h2 className="text-3xl font-bold mb-8 flex items-center">
-        <span className="mr-2" style={{color: '#FF7E70'}}>•</span> Events Schedule
-      </h2>
+      <div className="flex justify-center mb-0">
+        <img
+          src="/images/assets/events.png"
+          alt="Events"
+          className="w-auto"
+          style={{ objectFit: 'contain', height: '200px' }}
+        />
+      </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {schedule.map((monthData) => (
           <div key={monthData.month} className="p-6" style={{border: '2px solid #FF7E70', borderRadius: '8px'}}>
