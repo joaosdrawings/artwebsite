@@ -1,10 +1,12 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import Birds from './Birds';
 
 export default function ParallaxContent() {
   const containerRef = useRef<HTMLDivElement>(null);
   const backgroundRef = useRef<HTMLDivElement>(null);
+  const birdsRef = useRef<HTMLDivElement>(null);
   const foregroundRef = useRef<HTMLDivElement>(null);
   const arrowRef = useRef<HTMLDivElement>(null);
   const svgRef = useRef<SVGSVGElement>(null);
@@ -139,6 +141,11 @@ export default function ParallaxContent() {
         backgroundRef.current.style.transform = `translateY(${scrolled * -0.03}px)`;
       }
 
+      // Birds scroll at same rate as background for parallax
+      if (birdsRef.current) {
+        birdsRef.current.style.transform = `translateY(${scrolled * -0.03}px)`;
+      }
+
       // Foreground scrolls faster - scroll up
       if (foregroundRef.current) {
         foregroundRef.current.style.transform = `translateY(${scrolled * -0.15}px)`;
@@ -204,6 +211,9 @@ export default function ParallaxContent() {
           onLoad={() => setBackgroundLoaded(true)}
         />
       </div>
+
+      {/* Birds layer - between background and foreground */}
+      <Birds ref={birdsRef} />
 
       {/* Foreground layer - scrolls faster */}
       <div
