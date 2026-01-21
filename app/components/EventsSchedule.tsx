@@ -92,7 +92,23 @@ export default function EventsSchedule() {
   ];
 
   return (
-    <section id="events" className="py-16 px-8 max-w-6xl mx-auto">
+    <div style={{ position: 'relative', width: '100%' }}>
+      <div
+        aria-hidden="true"
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: '50%',
+          transform: 'translateX(-50%)',
+          width: '100%',
+          height: '100%',
+          zIndex: 0,
+          padding: '32px 0', // extra vertical padding
+          background: 'linear-gradient(135deg, #FAF9F6 0%, #F0EAD6 50%, #FFE8D6 100%)',
+          pointerEvents: 'none',
+        }}
+      />
+      <section id="events" className="py-16 px-8 max-w-6xl mx-auto" style={{ position: 'relative', zIndex: 1 }}>
         {/* Mobile/Tablet header image */}
         <div className="flex justify-center mb-8 md:hidden">
           <img
@@ -213,7 +229,8 @@ export default function EventsSchedule() {
 
         </div>
       </div>
-    </section>
+      </section>
+    </div>
 
   );
 }

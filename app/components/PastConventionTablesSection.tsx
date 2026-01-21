@@ -56,7 +56,23 @@ export default function PastConventionTablesSection({ onModalChange }: { onModal
   };
 
   return (
-    <section className="py-16 px-8">
+    <div style={{ position: 'relative', width: '100%' }}>
+      <div
+        aria-hidden="true"
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: '50%',
+          transform: 'translateX(-50%)',
+          width: '100%',
+          height: '100%',
+          zIndex: 0,
+          padding: '32px 0',
+          background: 'linear-gradient(135deg, #2C2C2C 0%, #4B2E2E 50%, #7A4A4A 100%)',
+          pointerEvents: 'none',
+        }}
+      />
+      <section className="py-24 px-8" style={{ position: 'relative', zIndex: 1, minHeight: '600px' }}>
       <h2 className="text-3xl font-bold text-center mb-8">Past Convention tables</h2>
       <div className="relative max-w-6xl mx-auto">
         {/* Left Arrow */}
@@ -91,7 +107,7 @@ export default function PastConventionTablesSection({ onModalChange }: { onModal
               <img
                 src={imageSrc}
                 alt={formatImageTitle(imageSrc.split('/').pop() || '')}
-                style={{height: '300px', objectFit: 'contain', display: 'block'}}
+                style={{height: '450px', objectFit: 'contain', display: 'block'}}
                 loading="lazy"
               />
             </div>
@@ -150,6 +166,7 @@ export default function PastConventionTablesSection({ onModalChange }: { onModal
           </div>
         </div>
       )}
-    </section>
+      </section>
+    </div>
   );
 }
