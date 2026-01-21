@@ -6,6 +6,7 @@ import ParallaxContent from './components/ParallaxContent';
 import DynamicHeader from './components/DynamicHeader';
 import InstagramFeed from './components/InstagramFeed';
 import EventsSchedule from './components/EventsSchedule';
+import PastConventionTablesSection from './components/PastConventionTablesSection';
 
 export default function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -76,11 +77,14 @@ export default function Home() {
           pointerEvents: 'none'
         }}
       >
+
         <CarouselSection id="illustration" title="ILLUSTRATION" images={illustrationImages} onModalChange={setIsModalOpen} />
-        
-        <InstagramFeed />
 
         <EventsSchedule />
+
+        <PastConventionTablesSection onModalChange={setIsModalOpen} />
+
+        <InstagramFeed />
 
         <section className="py-16 px-8 max-w-6xl mx-auto">
           <h2 className="text-3xl font-bold mb-8">About Rosuuri</h2>
@@ -93,17 +97,7 @@ export default function Home() {
           <a href="#" style={{color: '#E64A4A'}}>・・ ALL LINKS</a>
         </section>
 
-        <section className="py-16 px-8 max-w-6xl mx-auto">
-          <h2 className="text-3xl font-bold mb-8">Notable Works</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="h-64 rounded-lg" style={{backgroundColor: '#F0EAD6'}}></div>
-            <div className="h-64 rounded-lg" style={{backgroundColor: '#F0EAD6'}}></div>
-            <div className="h-64 rounded-lg" style={{backgroundColor: '#F0EAD6'}}></div>
-          </div>
-          <div className="text-center mt-8">
-            <a href="#" style={{color: '#FF7E70'}}>・・ VIEW WORK HISTORY</a>
-          </div>
-        </section>
+        {/* Notable Works section removed, replaced by Past Convention tables above */}
 
         <section className="py-16 px-8 max-w-6xl mx-auto">
           <h2 className="text-3xl font-bold mb-8">Contact</h2>

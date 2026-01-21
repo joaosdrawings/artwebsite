@@ -34,6 +34,13 @@ const Birds = forwardRef<HTMLDivElement>((props, ref) => {
         <div className="bird bird--five"></div>
       </div>
 
+      <div className="bird-container bird-container--six">
+        <div className="bird bird--six"></div>
+      </div>
+
+      <div className="bird-container bird-container--seven">
+        <div className="bird bird--seven"></div>
+      </div>
       <style jsx>{`
         .bird {
           background-image: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/174479/bird-cells-new.svg);
@@ -42,6 +49,7 @@ const Birds = forwardRef<HTMLDivElement>((props, ref) => {
           height: 125px;
           will-change: background-position;
           filter: brightness(0.4) saturate(2) hue-rotate(200deg) blur(4.5px);
+          transform: skewY(-8deg) scaleX(0.85);
           
           animation-name: fly-cycle;
           animation-timing-function: steps(10);
@@ -49,28 +57,38 @@ const Birds = forwardRef<HTMLDivElement>((props, ref) => {
         }
 
         .bird--one {
-          animation-duration: 1.3s;
+          animation-duration: 0.65s;
           animation-delay: -0.2s;
         }
         
         .bird--two {
-          animation-duration: 1.15s;
+          animation-duration: 0.575s;
           animation-delay: -0.6s;
         }
         
         .bird--three {
-          animation-duration: 1s;
+          animation-duration: 0.5s;
           animation-delay: -0.5s;
         }
         
         .bird--four {
-          animation-duration: 1.25s;
+          animation-duration: 0.625s;
           animation-delay: -0.25s;
         }
         
         .bird--five {
-          animation-duration: 1.1s;
+          animation-duration: 0.55s;
           animation-delay: -0.4s;
+        }
+
+        .bird--six {
+          animation-duration: 0.6s;
+          animation-delay: -0.3s;
+        }
+
+        .bird--seven {
+          animation-duration: 0.7s;
+          animation-delay: -0.1s;
         }
 
         .bird-container {
@@ -118,6 +136,20 @@ const Birds = forwardRef<HTMLDivElement>((props, ref) => {
           animation-duration: 27s;
           animation-delay: 7s;
           animation-name: fly-right-medium-small;
+        }
+
+        .bird-container--six {
+          top: 12%;
+          animation-duration: 22s;
+          animation-delay: 12s;
+          animation-name: fly-right-small;
+        }
+
+        .bird-container--seven {
+          top: 20%;
+          animation-duration: 30s;
+          animation-delay: 3s;
+          animation-name: fly-right-medium;
         }
 
         @keyframes fly-cycle {

@@ -93,41 +93,41 @@ export default function EventsSchedule() {
 
   return (
     <section id="events" className="py-16 px-8 max-w-6xl mx-auto">
-      {/* Mobile/Tablet header image */}
-      <div className="flex justify-center mb-8 md:hidden">
-        <img
-          src="/images/assets/events.png"
-          alt="Events"
-          className="w-auto"
-          style={{ objectFit: 'contain', height: '400px' }}
-        />
-      </div>
-
-      <div className="grid md:grid-cols-[320px_1fr] gap-8 items-start">
-        {/* Desktop left-side full-height image */}
-        <div className="hidden md:flex">
+        {/* Mobile/Tablet header image */}
+        <div className="flex justify-center mb-8 md:hidden">
           <img
-            src="/images/assets/eventsfull.png"
+            src="/images/assets/events.png"
             alt="Events"
-            className="w-full"
-            style={{ objectFit: 'contain', maxHeight: '100%', borderRadius: '12px' }}
+            className="w-auto"
+            style={{ objectFit: 'contain', height: '400px' }}
           />
         </div>
 
-        {/* Months grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {schedule.map((monthData) => (
-            <div key={monthData.month} className="calendar-card" style={{ position: 'relative' }}>
-              {/* Calendar Header */}
-              <header style={{
-                background: '#FF7E70',
-                color: '#fff',
-                padding: '1.5em 1.25em',
-                borderRadius: '1em 1em 0 0',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center'
-              }}>
+        <div className="grid md:grid-cols-[320px_1fr] gap-8 items-start">
+          {/* Desktop left-side full-height image */}
+          <div className="hidden md:flex">
+            <img
+              src="/images/assets/eventsfull.png"
+              alt="Events"
+              className="w-full"
+              style={{ objectFit: 'contain', maxHeight: '100%', borderRadius: '12px' }}
+            />
+          </div>
+
+          {/* Months grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {schedule.map((monthData) => (
+              <div key={monthData.month} className="calendar-card" style={{ position: 'relative' }}>
+                {/* Calendar Header */}
+                <header style={{
+                  background: '#FF7E70',
+                  color: '#fff',
+                  padding: '1.5em 1.25em',
+                  borderRadius: '1em 1em 0 0',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center'
+                }}>
                 <div style={{
                   fontSize: '2em',
                   lineHeight: '1em',
@@ -168,24 +168,22 @@ export default function EventsSchedule() {
                 top: '68px',
                 left: '1.5em'
               }}>
-                <span style={{
-                  background: '#fff',
-                  borderRadius: '4px',
-                  boxShadow: '0 3px 1px rgba(0, 0, 0, .3), 0 -1px 1px rgba(0, 0, 0, .2)',
-                  display: 'inline-block',
-                  margin: '0 4px',
-                  height: '24px',
-                  width: '6px'
-                }}></span>
-                <span style={{
-                  background: '#fff',
-                  borderRadius: '4px',
-                  boxShadow: '0 3px 1px rgba(0, 0, 0, .3), 0 -1px 1px rgba(0, 0, 0, .2)',
-                  display: 'inline-block',
-                  margin: '0 4px',
-                  height: '24px',
-                  width: '6px'
-                }}></span>
+                  <span style={{
+                    borderRadius: '4px',
+                    boxShadow: '0 3px 1px rgba(0, 0, 0, .3), 0 -1px 1px rgba(0, 0, 0, .2)',
+                    display: 'inline-block',
+                    margin: '0 4px',
+                    height: '24px',
+                    width: '6px'
+                  }}></span>
+                  <span style={{
+                    borderRadius: '4px',
+                    boxShadow: '0 3px 1px rgba(0, 0, 0, .3), 0 -1px 1px rgba(0, 0, 0, .2)',
+                    display: 'inline-block',
+                    margin: '0 4px',
+                    height: '24px',
+                    width: '6px'
+                  }}></span>
               </div>
 
               <div className="ring-right" style={{
@@ -193,29 +191,29 @@ export default function EventsSchedule() {
                 top: '68px',
                 right: '1.5em'
               }}>
-                <span style={{
-                  background: '#fff',
-                  borderRadius: '4px',
-                  boxShadow: '0 3px 1px rgba(0, 0, 0, .3), 0 -1px 1px rgba(0, 0, 0, .2)',
-                  display: 'inline-block',
-                  margin: '0 4px',
-                  height: '24px',
-                  width: '6px'
-                }}></span>
-                <span style={{
-                  background: '#fff',
-                  borderRadius: '4px',
-                  boxShadow: '0 3px 1px rgba(0, 0, 0, .3), 0 -1px 1px rgba(0, 0, 0, .2)',
-                  display: 'inline-block',
-                  margin: '0 4px',
-                  height: '24px',
-                  width: '6px'
-                }}></span>
+                  <span style={{
+                    borderRadius: '4px',
+                    boxShadow: '0 3px 1px rgba(0, 0, 0, .3), 0 -1px 1px rgba(0, 0, 0, .2)',
+                    display: 'inline-block',
+                    margin: '0 4px',
+                    height: '24px',
+                    width: '6px'
+                  }}></span>
+                  <span style={{
+                    borderRadius: '4px',
+                    boxShadow: '0 3px 1px rgba(0, 0, 0, .3), 0 -1px 1px rgba(0, 0, 0, .2)',
+                    display: 'inline-block',
+                    margin: '0 4px',
+                    height: '24px',
+                    width: '6px'
+                  }}></span>
               </div>
             </div>
           ))}
+
         </div>
       </div>
     </section>
+
   );
 }
