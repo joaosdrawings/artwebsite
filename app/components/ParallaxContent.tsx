@@ -58,7 +58,9 @@ export default function ParallaxContent() {
       pathPoints.push({ type: 'L', x: p.x, y: p.y });
     }
 
-    function createNewPathElement(
+    let pathElementCache: SVGPathElement | null = null;
+
+    function updatePathElement(
       pointsArray: Array<{ type: string; x: number; y: number }>,
       percentageComplete: number
     ) {
@@ -69,20 +71,21 @@ export default function ParallaxContent() {
         pathString += `${pointsArray[i].type}${pointsArray[i].x} ${pointsArray[i].y}`;
       }
 
-      const pathElement = document.createElementNS(
-        'http://www.w3.org/2000/svg',
-        'path'
-      );
+      if (!pathElementCache) {
+        pathElementCache = document.createElementNS(
+          'http://www.w3.org/2000/svg',
+          'path'
+        );
+        pathElementCache.setAttribute('id', 'temporarySVGArrowPath');
+        pathElementCache.setAttribute('stroke', '#FFFFFF');
+        pathElementCache.setAttribute('fill', 'none');
+        pathElementCache.setAttribute('stroke-width', '3');
+        pathElementCache.setAttribute('stroke-linecap', 'round');
+        pathElementCache.setAttribute('stroke-linejoin', 'round');
+        svg.appendChild(pathElementCache);
+      }
 
-      pathElement.setAttribute('d', pathString);
-      pathElement.setAttribute('id', 'temporarySVGArrowPath');
-      pathElement.setAttribute('stroke', '#FFFFFF');
-      pathElement.setAttribute('fill', 'none');
-      pathElement.setAttribute('stroke-width', '3');
-      pathElement.setAttribute('stroke-linecap', 'round');
-      pathElement.setAttribute('stroke-linejoin', 'round');
-
-      return pathElement;
+      pathElementCache.setAttribute('d', pathString);
     }
 
     function easeOut(x: number) {
@@ -93,7 +96,6 @@ export default function ParallaxContent() {
     let start: number | undefined;
     let previousTimeStamp: number | undefined;
     let isReverse = false;
-    let cachedOldPath: Element | null = null;
 
     function step(timestamp: number) {
       if (start === undefined) {
@@ -105,17 +107,7 @@ export default function ParallaxContent() {
         let rawPercentage = Math.min((1 / duration) * elapsed, 1.0);
         const percentage = isReverse ? 1 - easeOut(rawPercentage) : easeOut(rawPercentage);
 
-        const animatedPathElement = createNewPathElement(pathPoints, percentage);
-
-        if (!cachedOldPath) {
-          cachedOldPath = document.getElementById('temporarySVGArrowPath');
-        }
-        if (cachedOldPath !== null && cachedOldPath.parentNode) {
-          cachedOldPath.parentNode.removeChild(cachedOldPath);
-        }
-
-        svg.appendChild(animatedPathElement);
-        cachedOldPath = animatedPathElement;
+        updatePathElement(pathPoints, percentage);
       }
 
       previousTimeStamp = timestamp;
@@ -152,17 +144,17 @@ export default function ParallaxContent() {
 
       // Background scrolls slower (parallax effect) - scroll up
       if (backgroundRef.current) {
-        backgroundRef.current.style.transform = `translateY(${scrolled * -0.03}px)`;
+        backgroundRef.current.style.transform = `translate3d(0, ${scrolled * -0.03}px, 0)`;
       }
 
       // Birds scroll at same rate as background for parallax
       if (birdsRef.current) {
-        birdsRef.current.style.transform = `translateY(${scrolled * -0.03}px)`;
+        birdsRef.current.style.transform = `translate3d(0, ${scrolled * -0.03}px, 0)`;
       }
 
       // Foreground scrolls faster - scroll up
       if (foregroundRef.current) {
-        foregroundRef.current.style.transform = `translateY(${scrolled * -0.15}px)`;
+        foregroundRef.current.style.transform = `translate3d(0, ${scrolled * -0.15}px, 0)`;
       }
 
       // Fade out hero based on scroll: start at 25% height, finish at 80%

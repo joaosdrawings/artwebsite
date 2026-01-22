@@ -14,7 +14,7 @@ export default function ParallaxHero() {
       ticking = false;
       if (parallaxRef.current) {
         const rate = latestScroll * -0.5;
-        parallaxRef.current.style.transform = `translateY(${rate}px)`;
+        parallaxRef.current.style.transform = `translate3d(0, ${rate}px, 0)`;
       }
     };
 
