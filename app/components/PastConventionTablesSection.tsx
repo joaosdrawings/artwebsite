@@ -1,4 +1,6 @@
-import { useMemo, useState } from 'react';
+'use client';
+
+import { useMemo, useState, useEffect, useRef } from 'react';
 import CarouselSection from './CarouselSection';
 
 // Helper to format image name to title
@@ -32,16 +34,48 @@ export default function PastConventionTablesSection({ onModalChange }: { onModal
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [showModal, setShowModal] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  
+  // Parallax effect for yumia background
+  const yumiaRef = useRef<HTMLDivElement>(null);
+  const rafRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    let ticking = false;
+    let latestScroll = 0;
+
+    const updateParallax = () => {
+      ticking = false;
+      if (yumiaRef.current) {
+        yumiaRef.current.style.transform = `translateX(-50%) translate3d(0, ${latestScroll * 0.15}px, 0)`;
+      }
+    };
+
+    const handleScroll = () => {
+      latestScroll = window.pageYOffset;
+      if (!ticking) {
+        ticking = true;
+        rafRef.current = requestAnimationFrame(updateParallax);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    };
+  }, []);
 
   const openModal = (imageSrc: string, index: number) => {
     setSelectedImage(imageSrc);
     setCurrentImageIndex(index);
     setShowModal(true);
+    document.body.style.overflow = 'hidden';
     onModalChange?.(true);
   };
   const closeModal = () => {
     setShowModal(false);
     setSelectedImage(null);
+    document.body.style.overflow = '';
     onModalChange?.(false);
   };
   const goToPrevious = () => {
@@ -56,7 +90,35 @@ export default function PastConventionTablesSection({ onModalChange }: { onModal
   };
 
   return (
-    <div style={{ position: 'relative', width: '100%' }}>
+    <div style={{ position: 'relative', width: '100%', overflow: 'hidden' }}>
+      {/* Yumia parallax background layer */}
+      <div
+        ref={yumiaRef}
+        aria-hidden="true"
+        style={{
+          position: 'absolute',
+          top: -400,
+          left: '50%',
+          transform: 'translateX(-50%)',
+          width: '100%',
+          height: '100%',
+          zIndex: 0,
+          willChange: 'transform',
+          pointerEvents: 'none',
+        }}
+      >
+        <img
+          src="/images/yumia.JPG"
+          alt=""
+          style={{
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
+            objectPosition: 'center',
+          }}
+        />
+      </div>
+      {/* Gradient overlay with reduced opacity */}
       <div
         aria-hidden="true"
         style={{
@@ -66,14 +128,14 @@ export default function PastConventionTablesSection({ onModalChange }: { onModal
           transform: 'translateX(-50%)',
           width: '100%',
           height: '100%',
-          zIndex: 0,
-          padding: '32px 0',
+          zIndex: 1,
           background: 'linear-gradient(135deg, #2C2C2C 0%, #4B2E2E 50%, #7A4A4A 100%)',
+          opacity: 0.85,
           pointerEvents: 'none',
         }}
       />
-      <section className="py-24 px-8" style={{ position: 'relative', zIndex: 1, minHeight: '600px' }}>
-      <h2 className="text-3xl font-bold text-center mb-8">Past Convention tables</h2>
+      <section className="px-8" style={{ position: 'relative', zIndex: 2, paddingTop: '96px', paddingBottom: '96px', minHeight: '600px' }}>
+      <h2 className="text-3xl font-bold text-center mb-8" style={{ color: '#FFFFFF', textTransform: 'uppercase' }}>Past Convention Tables</h2>
       <div className="relative max-w-6xl mx-auto">
         {/* Left Arrow */}
         <button

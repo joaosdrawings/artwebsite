@@ -24,10 +24,20 @@ export default function DynamicHeader() {
       <header className={`sticky top-0 z-[100] transition-all duration-300 flex justify-between items-center text-white p-4 ${
         isScrolled ? 'md:bg-[#FAF9F6] md:shadow-md' : 'md:p-8'
       }`} style={{color: isScrolled ? '#2C2C2C' : 'white'}}>
-        <div className={`hidden md:block font-bold transition-all duration-300 ${
-          isScrolled ? 'text-xl' : 'text-2xl'
-        }`} style={{textShadow: isScrolled ? 'none' : '2px 2px 4px rgba(0,0,0,0.8)'}}>
-          ILLUSTRATOR イラストレーター
+        {/* Logo for Desktop and Mobile */}
+        <div className={`flex items-center transition-all duration-300 ${
+          isScrolled ? 'md:h-12' : 'md:h-16'
+        }`}>
+          <img 
+            src="/images/logo/logo.PNG" 
+            alt="Logo" 
+            style={{
+              height: isScrolled ? '48px' : '64px',
+              width: 'auto',
+              objectFit: 'contain',
+              transition: 'height 300ms ease-in-out'
+            }}
+          />
         </div>
         
         {/* Desktop Navigation */}

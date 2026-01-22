@@ -80,12 +80,14 @@ export default function CarouselSection({ id, title, images, onModalChange }: Ca
     setShowModal(true);
     setImageLoaded(false);
     setIsInitialLoad(true);
+    document.body.style.overflow = 'hidden';
     onModalChange?.(true);
   };
 
   const closeModal = useCallback(() => {
     setShowModal(false);
     setSelectedImage(null);
+    document.body.style.overflow = '';
     onModalChange?.(false);
   }, [onModalChange]);
 

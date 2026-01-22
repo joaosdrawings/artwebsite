@@ -95,6 +95,7 @@ export default function EventsSchedule() {
     <div className="calendar-bg-wrapper">
       <div aria-hidden="true" className="calendar-bg-gradient" />
       <section id="events" className="py-16 px-8 max-w-6xl mx-auto calendar-content-wrapper">
+        <h2 className="text-3xl font-bold text-center mb-12" style={{ color: 'var(--salmon)', textTransform: 'uppercase' }}>Convention Schedule</h2>
         {/* Mobile/Tablet header image */}
         <div className="flex justify-center mb-8 md:hidden">
           <img
@@ -141,17 +142,6 @@ export default function EventsSchedule() {
                 ) : (
                   <p className="text-sm italic text-center calendar-no-events">No events scheduled</p>
                 )}
-              </div>
-
-              {/* Ring decorations */}
-              <div className="ring-left calendar-ring-deco calendar-ring-left">
-                  <span className="calendar-ring-span"></span>
-                  <span className="calendar-ring-span"></span>
-              </div>
-
-              <div className="ring-right calendar-ring-deco calendar-ring-right">
-                  <span className="calendar-ring-span"></span>
-                  <span className="calendar-ring-span"></span>
               </div>
             </div>
           ))}
