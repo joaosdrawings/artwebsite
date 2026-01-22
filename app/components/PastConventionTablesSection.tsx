@@ -108,7 +108,7 @@ export default function PastConventionTablesSection({ onModalChange }: { onModal
         }}
       >
         <img
-          src="/images/yumia.JPG"
+          src="/images/galleryImages/yumia.JPG"
           alt=""
           style={{
             width: '100%',

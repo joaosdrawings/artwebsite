@@ -46,15 +46,15 @@ export default function Home() {
   }, []);
 
   const illustrationImages = useMemo(() => [
-    '/images/Maka.JPG',
-    '/images/Lum.JPG',
-    '/images/Mitsuri.JPG',
-    '/images/Scherezard.JPG',
-    '/images/Yoko.JPG',
-    '/images/Yor.jpg',
-    '/images/Yoruichi.jpg',
-    '/images/yumia.JPG',
-    '/images/ryza.jpg'
+    '/images/galleryImages/Maka.JPG',
+    '/images/galleryImages/Lum.JPG',
+    '/images/galleryImages/Mitsuri.JPG',
+    '/images/galleryImages/Scherezard.JPG',
+    '/images/galleryImages/Yoko.JPG',
+    '/images/galleryImages/Yor.jpg',
+    '/images/galleryImages/Yoruichi.jpg',
+    '/images/galleryImages/yumia.JPG',
+    '/images/galleryImages/ryza.jpg'
   ], []);
 
   return (

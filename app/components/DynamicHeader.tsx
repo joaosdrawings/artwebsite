@@ -24,25 +24,26 @@ export default function DynamicHeader() {
       <header className={`sticky top-0 z-[100] transition-all duration-300 flex justify-between items-center text-white p-4 ${
         isScrolled ? 'md:bg-[#FAF9F6] md:shadow-md' : 'md:p-8'
       }`} style={{color: isScrolled ? '#2C2C2C' : 'white'}}>
-        {/* Logo for Desktop and Mobile */}
-        <div className={`flex items-center transition-all duration-300 ${
-          isScrolled ? 'md:h-12' : 'md:h-16'
-        }`}>
-          <img 
-            src="/images/logo/logo.PNG" 
-            alt="Logo" 
+        {/* Logo Text */}
+        <a href="/" className="flex items-center">
+          <h1 
+            className="font-bold transition-all duration-300"
             style={{
-              height: isScrolled ? '48px' : '64px',
-              width: 'auto',
-              objectFit: 'contain',
-              transition: 'height 300ms ease-in-out'
+              fontSize: isScrolled ? '1.5rem' : '2rem',
+              color: isScrolled ? '#2C2C2C' : 'white',
+              textShadow: isScrolled ? 'none' : '2px 2px 4px rgba(0,0,0,0.8)',
+              letterSpacing: '0.05em'
             }}
-          />
-        </div>
+          >
+            MOITA ARTWORK
+          </h1>
+        </a>
         
         {/* Desktop Navigation */}
         <div className="hidden md:flex items-center space-x-4">
-          <a href="#events" style={{color: isScrolled ? '#2C2C2C' : 'white', textShadow: isScrolled ? 'none' : '2px 2px 4px rgba(0,0,0,0.8)'}}>Convention Schedule</a>
+          <a href="/" style={{color: isScrolled ? '#2C2C2C' : 'white', textShadow: isScrolled ? 'none' : '2px 2px 4px rgba(0,0,0,0.8)'}}>Home</a>
+          <a href="/gallery" style={{color: isScrolled ? '#2C2C2C' : 'white', textShadow: isScrolled ? 'none' : '2px 2px 4px rgba(0,0,0,0.8)'}}>Gallery</a>
+          <a href="/#events" style={{color: isScrolled ? '#2C2C2C' : 'white', textShadow: isScrolled ? 'none' : '2px 2px 4px rgba(0,0,0,0.8)'}}>Convention Schedule</a>
           <a href="#" style={{color: '#FF7E70', textShadow: isScrolled ? 'none' : '2px 2px 4px rgba(0,0,0,0.8)'}}>SHOP</a>
           <Image src="https://static.parastorage.com/services/linguist-flags/1.969.0/assets/flags/corner/USA_2x.png" alt="English" width={24} height={16} style={{filter: isScrolled ? 'none' : 'drop-shadow(2px 2px 4px rgba(0,0,0,0.8))'}} />
           <Image src="https://static.parastorage.com/services/linguist-flags/1.969.0/assets/flags/corner/JPN_2x.png" alt="Japanese" width={24} height={16} style={{filter: isScrolled ? 'none' : 'drop-shadow(2px 2px 4px rgba(0,0,0,0.8))'}} />
@@ -94,7 +95,23 @@ export default function DynamicHeader() {
           <div className="flex flex-col h-full">
             <div className="flex-1 p-8 pt-24 space-y-8">
               <a 
-                href="#events" 
+                href="/" 
+                className="block text-2xl font-bold transition-colors hover:opacity-70"
+                style={{color: '#2C2C2C'}}
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Home
+              </a>
+              <a 
+                href="/gallery" 
+                className="block text-2xl font-bold transition-colors hover:opacity-70"
+                style={{color: '#2C2C2C'}}
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Gallery
+              </a>
+              <a 
+                href="/#events" 
                 className="block text-2xl font-bold transition-colors hover:opacity-70"
                 style={{color: '#2C2C2C'}}
                 onClick={() => setIsMobileMenuOpen(false)}
