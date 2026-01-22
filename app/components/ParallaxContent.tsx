@@ -10,6 +10,7 @@ export default function ParallaxContent() {
   const foregroundRef = useRef<HTMLDivElement>(null);
   const arrowRef = useRef<HTMLDivElement>(null);
   const svgRef = useRef<SVGSVGElement>(null);
+  const rafRef = useRef<number | null>(null);
   const [backgroundLoaded, setBackgroundLoaded] = useState(false);
   const [foregroundLoaded, setForegroundLoaded] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
@@ -92,6 +93,7 @@ export default function ParallaxContent() {
     let start: number | undefined;
     let previousTimeStamp: number | undefined;
     let isReverse = false;
+    let cachedOldPath: Element | null = null;
 
     function step(timestamp: number) {
       if (start === undefined) {
@@ -105,10 +107,15 @@ export default function ParallaxContent() {
 
         const animatedPathElement = createNewPathElement(pathPoints, percentage);
 
-        const oldpath = document.getElementById('temporarySVGArrowPath');
-        if (oldpath !== null) oldpath.parentNode?.removeChild(oldpath);
+        if (!cachedOldPath) {
+          cachedOldPath = document.getElementById('temporarySVGArrowPath');
+        }
+        if (cachedOldPath !== null && cachedOldPath.parentNode) {
+          cachedOldPath.parentNode.removeChild(cachedOldPath);
+        }
 
         svg.appendChild(animatedPathElement);
+        cachedOldPath = animatedPathElement;
       }
 
       previousTimeStamp = timestamp;
@@ -131,10 +138,17 @@ export default function ParallaxContent() {
   useEffect(() => {
     let ticking = false;
     let latestScroll = 0;
+    let lastProcessedScroll = -1;
 
     const updateOnScroll = () => {
       ticking = false;
       const scrolled = latestScroll;
+      
+      // Skip updates if scroll position hasn't changed significantly
+      if (Math.abs(scrolled - lastProcessedScroll) < 1) {
+        return;
+      }
+      lastProcessedScroll = scrolled;
 
       // Background scrolls slower (parallax effect) - scroll up
       if (backgroundRef.current) {
@@ -173,12 +187,15 @@ export default function ParallaxContent() {
       latestScroll = window.pageYOffset;
       if (!ticking) {
         ticking = true;
-        requestAnimationFrame(updateOnScroll);
+        rafRef.current = requestAnimationFrame(updateOnScroll);
       }
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    };
   }, []);
 
   return (

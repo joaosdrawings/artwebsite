@@ -1,39 +1,3 @@
-/* Custom Styles
-   Add your custom CSS styles here
-   These styles will override default styles and can be imported in your components
-*/
-
-/* Color Variables */
-:root {
-  --salmon: #FF7E70;
-  --white: #FFFFFF;
-  --cream: #FAF9F6;
-  --dark: #2C2C2C;
-}
-
-/* Example custom classes - feel free to add your own */
-.custom-text {
-  font-weight: 600;
-  letter-spacing: 0.5px;
-}
-
-.custom-border {
-  border: 2px solid var(--salmon);
-  border-radius: 8px;
-}
-
-.custom-shadow {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
-
-.animated-arrow {
-  margin-left: -50px;
-}
-
-.ring-right span, .ring-left span {
-    background-color: rgb(100, 100, 100)!important;
-}
-
 /* EventsSchedule Calendar Section Styles */
 .calendar-bg-wrapper {
   position: relative;
@@ -123,7 +87,7 @@
 }
 .calendar-ring-span {
   border-radius: 4px;
-  box-shadow: 0 3px 1px rgba(0, 0, 0, 0.86), 0 -1px 1px rgba(0, 0, 0, .2);
+  box-shadow: 0 3px 1px rgba(0, 0, 0, .3), 0 -1px 1px rgba(0, 0, 0, .2);
   display: inline-block;
   margin: 0 4px;
   height: 24px;
