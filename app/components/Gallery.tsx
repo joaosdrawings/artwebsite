@@ -153,7 +153,7 @@ export default function Gallery({ images, onModalChange }: GalleryProps) {
             key={index}
             ref={(el) => { itemRefs.current[index] = el; }}
             data-index={index}
-            className={`masonry-item ${loadedImages[index] ? 'loaded' : ''} ${inView[index] ? 'in-view' : ''} ${image.isLandscape ? 'landscape' : ''}`}
+            className={`masonry-item ${loadedImages[index] ? 'loaded' : ''} ${inView[index] ? 'in-view' : ''} ${image.isLandscape ? 'landscape' : 'portrait'}`}
             onClick={() => openLightbox(index)}
           >
             <img
@@ -247,8 +247,9 @@ export default function Gallery({ images, onModalChange }: GalleryProps) {
 
       <style jsx>{`
         .masonry-gallery {
-          column-count: 1;
-          column-gap: 20px;
+          display: grid;
+          grid-template-columns: 1fr;
+          gap: 20px;
           padding: 40px 20px;
           max-width: 1400px;
           margin: 0 auto;
@@ -256,25 +257,38 @@ export default function Gallery({ images, onModalChange }: GalleryProps) {
 
         @media (min-width: 640px) {
           .masonry-gallery {
-            column-count: 2;
+            grid-template-columns: repeat(2, 1fr);
           }
         }
 
         @media (min-width: 1024px) {
           .masonry-gallery {
-            column-count: 3;
+            /* Use 6 columns: 3 cols for tall images (2 cols each), 3 cols for wide pairs (3 cols each) */
+            grid-template-columns: repeat(6, 1fr);
+            /* Let height be determined by aspect ratio */
+            grid-auto-rows: auto;
+            grid-auto-flow: dense;
+          }
+
+          /* Portrait/tall images span 2 columns (equivalent to 1 of 3 original columns) */
+          .masonry-item.portrait {
+            grid-column: span 2;
+          }
+
+          /* Landscape/wide images span 3 columns (1/2 of a row when paired) */
+          .masonry-item.landscape {
+            grid-column: span 3;
           }
         }
 
         .masonry-item {
-          break-inside: avoid;
-          margin-bottom: 20px;
           cursor: pointer;
           opacity: 0;
           transform: translateY(24px);
           transition: opacity 0.6s ease, transform 0.6s ease;
           overflow: hidden;
-          border-radius: 8px;
+          width: 100%;
+          height: 100%;
         }
 
         .masonry-item.in-view {
@@ -296,12 +310,7 @@ export default function Gallery({ images, onModalChange }: GalleryProps) {
         }
 
         .masonry-item:hover .gallery-image {
-          transform: scale(1.2);
-        }
-
-        .masonry-item.landscape {
-          column-span: all;
-          margin-bottom: 20px;
+          transform: scale(1.05);
         }
       `}</style>
     </>

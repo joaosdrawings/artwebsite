@@ -85,11 +85,8 @@ export default function HomeClient({ galleryImages, conventionTableImages }: Hom
               className="text-4xl md:text-5xl font-bold mb-4" 
               style={{ color: '#FF7E70', textTransform: 'uppercase' }}
             >
-              Gallery
+              ILLUSTRATIONS
             </h2>
-            <p className="text-lg md:text-xl" style={{ color: '#666' }}>
-              Explore my collection of artwork
-            </p>
           </div>
           <Gallery images={galleryImages} onModalChange={setIsModalOpen} />
         </section>

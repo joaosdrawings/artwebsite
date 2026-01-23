@@ -24,25 +24,24 @@ export default function DynamicHeader() {
       <header className={`sticky top-0 z-[100] transition-all duration-300 flex justify-between items-center text-white p-4 ${
         isScrolled ? 'md:bg-[#FAF9F6] md:shadow-md' : 'md:p-8'
       }`} style={{color: isScrolled ? '#2C2C2C' : 'white'}}>
-        {/* Logo Text */}
+        {/* Logo */}
         <a href="/" className="flex items-center">
-          <h1 
-            className="font-bold transition-all duration-300"
+          <Image 
+            src="/images/logo/logo3.PNG" 
+            alt="Moita Artwork" 
+            width={isScrolled ? 120 : 160}
+            height={isScrolled ? 60 : 80}
+            className="transition-all duration-300"
             style={{
-              fontSize: isScrolled ? '1.5rem' : '2rem',
-              color: isScrolled ? '#2C2C2C' : 'white',
-              textShadow: isScrolled ? 'none' : '2px 2px 4px rgba(0,0,0,0.8)',
-              letterSpacing: '0.05em'
+              height: 'auto'
             }}
-          >
-            MOITA ARTWORK
-          </h1>
+          />
         </a>
         
         {/* Desktop Navigation */}
         <div className="hidden md:flex items-center space-x-4">
           <a href="/" style={{color: isScrolled ? '#2C2C2C' : 'white', textShadow: isScrolled ? 'none' : '2px 2px 4px rgba(0,0,0,0.8)'}}>Home</a>
-          <a href="/gallery" style={{color: isScrolled ? '#2C2C2C' : 'white', textShadow: isScrolled ? 'none' : '2px 2px 4px rgba(0,0,0,0.8)'}}>Gallery</a>
+          <a href="#gallery" onClick={(e) => { e.preventDefault(); document.getElementById('gallery')?.scrollIntoView({ behavior: 'smooth' }); }} style={{color: isScrolled ? '#2C2C2C' : 'white', textShadow: isScrolled ? 'none' : '2px 2px 4px rgba(0,0,0,0.8)', cursor: 'pointer'}}>Gallery</a>
           <a href="/#events" style={{color: isScrolled ? '#2C2C2C' : 'white', textShadow: isScrolled ? 'none' : '2px 2px 4px rgba(0,0,0,0.8)'}}>Convention Schedule</a>
           <a href="#" style={{color: '#FF7E70', textShadow: isScrolled ? 'none' : '2px 2px 4px rgba(0,0,0,0.8)'}}>SHOP</a>
           <Image src="https://static.parastorage.com/services/linguist-flags/1.969.0/assets/flags/corner/USA_2x.png" alt="English" width={24} height={16} style={{filter: isScrolled ? 'none' : 'drop-shadow(2px 2px 4px rgba(0,0,0,0.8))'}} />
@@ -103,10 +102,10 @@ export default function DynamicHeader() {
                 Home
               </a>
               <a 
-                href="/gallery" 
+                href="#gallery" 
                 className="block text-2xl font-bold transition-colors hover:opacity-70"
-                style={{color: '#2C2C2C'}}
-                onClick={() => setIsMobileMenuOpen(false)}
+                style={{color: '#2C2C2C', cursor: 'pointer'}}
+                onClick={(e) => { e.preventDefault(); document.getElementById('gallery')?.scrollIntoView({ behavior: 'smooth' }); setIsMobileMenuOpen(false); }}
               >
                 Gallery
               </a>
