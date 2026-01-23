@@ -1,166 +1,92 @@
-'use client';
+import { promises as fs } from 'fs';
+import path from 'path';
+import sizeOf from 'image-size';
+import HomeClient from './components/HomeClient';
 
-import { useState, useMemo, useEffect, useRef } from 'react';
-import CarouselSection from './components/CarouselSection';
-import ParallaxContent from './components/ParallaxContent';
-import DynamicHeader from './components/DynamicHeader';
-import InstagramFeed from './components/InstagramFeed';
-import EventsSchedule from './components/EventsSchedule';
-import PastConventionTablesSection from './components/PastConventionTablesSection';
+export default async function Home() {
+  // Read images from the galleryImages folder
+  const galleryDir = path.join(process.cwd(), 'public/images/galleryImages');
+  let galleryFiles: string[] = [];
 
-export default function Home() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const contentRef = useRef<HTMLDivElement>(null);
-  const scrollFrame = useRef<number | null>(null);
-  const latestScroll = useRef(0);
+  try {
+    const files = await fs.readdir(galleryDir);
+    // Filter for image files only
+    galleryFiles = files.filter(file => 
+      /\.(jpg|jpeg|png|gif|webp|JPG|JPEG|PNG|GIF|WEBP)$/i.test(file)
+    );
+  } catch (error) {
+    console.error('Error reading gallery images:', error);
+  }
 
-  useEffect(() => {
-    const updateContentOpacity = () => {
-      scrollFrame.current = null;
-      const heroHeight = window.innerHeight * 1.05 - 100;
-      const fadeEndScroll = heroHeight * 0.8;
-      const opacity = Math.min(1, latestScroll.current / fadeEndScroll);
-      if (contentRef.current) {
-        contentRef.current.style.opacity = opacity.toString();
-        contentRef.current.style.pointerEvents = opacity < 0.5 ? 'none' : 'auto';
+  // Convert to image objects with actual dimensions
+  const galleryImages = await Promise.all(galleryFiles.map(async filename => {
+    const filePath = path.join(galleryDir, filename);
+    let width = 800;
+    let height = 1000;
+    let isLandscape = false;
+
+    try {
+      const buffer = await fs.readFile(filePath);
+      const dimensions = sizeOf(buffer);
+      if (dimensions.width && dimensions.height) {
+        width = dimensions.width;
+        height = dimensions.height;
+        isLandscape = dimensions.width > dimensions.height;
       }
-    };
+    } catch (error) {
+      console.error(`Error getting dimensions for ${filename}:`, error);
+    }
 
-    const handleScroll = () => {
-      latestScroll.current = window.pageYOffset;
-      if (scrollFrame.current === null) {
-        scrollFrame.current = window.requestAnimationFrame(updateContentOpacity);
+    return {
+      src: `/images/galleryImages/${filename}`,
+      alt: filename.replace(/\.[^/.]+$/, '').replace(/[-_]/g, ' '),
+      width,
+      height,
+      isLandscape
+    };
+  }));
+
+  // Read images from the conventionTables folder
+  const conventionDir = path.join(process.cwd(), 'public/images/conventionTables');
+  let conventionFiles: string[] = [];
+
+  try {
+    const files = await fs.readdir(conventionDir);
+    // Filter for image files only
+    conventionFiles = files.filter(file => 
+      /\.(jpg|jpeg|png|gif|webp|JPG|JPEG|PNG|GIF|WEBP)$/i.test(file)
+    );
+  } catch (error) {
+    console.error('Error reading convention table images:', error);
+  }
+
+  // Convert to image objects with actual dimensions
+  const conventionTableImages = await Promise.all(conventionFiles.map(async filename => {
+    const filePath = path.join(conventionDir, filename);
+    let width = 800;
+    let height = 1000;
+    let isLandscape = false;
+
+    try {
+      const buffer = await fs.readFile(filePath);
+      const dimensions = sizeOf(buffer);
+      if (dimensions.width && dimensions.height) {
+        width = dimensions.width;
+        height = dimensions.height;
+        isLandscape = dimensions.width > dimensions.height;
       }
+    } catch (error) {
+      console.error(`Error getting dimensions for ${filename}:`, error);
+    }
+
+    return {
+      src: `/images/conventionTables/${filename}`,
+      alt: filename.replace(/\.[^/.]+$/, '').replace(/[-_]/g, ' '),
+      width,
+      height,
+      isLandscape
     };
+  }));
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    // Kick off initial calculation
-    handleScroll();
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-      if (scrollFrame.current !== null) {
-        cancelAnimationFrame(scrollFrame.current);
-      }
-    };
-  }, []);
-
-  const illustrationImages = useMemo(() => [
-    '/images/galleryImages/Maka.JPG',
-    '/images/galleryImages/Lum.JPG',
-    '/images/galleryImages/Mitsuri.JPG',
-    '/images/galleryImages/Scherezard.JPG',
-    '/images/galleryImages/Yoko.JPG',
-    '/images/galleryImages/Yor.jpg',
-    '/images/galleryImages/Yoruichi.jpg',
-    '/images/galleryImages/yumia.JPG',
-    '/images/galleryImages/ryza.jpg'
-  ], []);
-
-  return (
-    <div className="min-h-screen" style={{backgroundColor: '#FAF9F6', color: '#2C2C2C'}}>
-      {/* Header - only show when modal is not open */}
-      {!isModalOpen && <DynamicHeader />}
-
-      {/* Hero */}
-      <ParallaxContent />
-
-      {/* Main Content Container */}
-      <div 
-        ref={contentRef}
-        className="relative"
-        style={{
-          backgroundColor: 'transparent',
-          color: '#2C2C2C',
-          opacity: 0,
-          transition: 'opacity 0.1s ease-out',
-          pointerEvents: 'none'
-        }}
-      >
-
-        <CarouselSection id="illustration" title="ILLUSTRATION" images={illustrationImages} onModalChange={setIsModalOpen} />
-
-        <EventsSchedule />
-
-        <PastConventionTablesSection onModalChange={setIsModalOpen} />
-
-        <InstagramFeed />
-
-        <section className="py-16 px-8 max-w-6xl mx-auto">
-          <h2 className="text-3xl font-bold mb-8">About Rosuuri</h2>
-          <p className="text-lg mb-4">
-            An illustrator who draws for game and publishing companies. She designs characters and illustrates for light novels, games, and art books.
-          </p>
-          <p className="text-lg mb-8">
-            A VTuber who streams art and more every Saturday on Twitch.
-          </p>
-          <a href="#" style={{color: '#E64A4A'}}>・・ ALL LINKS</a>
-        </section>
-
-        {/* Notable Works section removed, replaced by Past Convention tables above */}
-
-        <section className="py-16 px-8 max-w-6xl mx-auto">
-          <h2 className="text-3xl font-bold mb-8">Contact</h2>
-          <p className="text-lg mb-4">
-            <a href="mailto:ART@ROSUURI.COM" style={{color: '#FF7E70'}}>ART@ROSUURI.COM</a>
-          </p>
-          <p className="mb-8">
-            For business inquiries, I accept work for games, light novels, illustration books, exhibitions, album/EP art, music videos, official merch, promotional art and more.
-          </p>
-          <p className="mb-8">
-            Please include the following in your email【Project Name, Materials, Schedule, and Budget】
-          </p>
-          <p className="mb-8">※English/日本語 = OK!</p>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div>
-              <h3 className="text-xl font-bold mb-4">Art Books</h3>
-              <div className="h-32 rounded-lg mb-4" style={{backgroundColor: '#F0EAD6'}}></div>
-              <a href="#" style={{color: '#E64A4A'}}>VIEW BOOKS</a>
-            </div>
-            <div>
-              <h3 className="text-xl font-bold mb-4">Events</h3>
-              <div className="h-32 rounded-lg mb-4" style={{backgroundColor: '#F0EAD6'}}></div>
-              <a href="#" style={{color: '#E64A4A'}}>VIEW EVENTS</a>
-            </div>
-          </div>
-        </section>
-
-        <footer className="py-16 px-8" style={{backgroundColor: '#F0EAD6'}}>
-          <div className="max-w-6xl mx-auto">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
-              <div>
-                <h3 className="text-xl font-bold mb-4">Clients</h3>
-                <div className="space-y-2">
-                  <div className="h-16 rounded" style={{backgroundColor: '#E8DCC4'}}></div>
-                  <div className="h-16 rounded" style={{backgroundColor: '#E8DCC4'}}></div>
-                </div>
-              </div>
-              <div>
-                <h3 className="text-xl font-bold mb-4">FIGURE</h3>
-                <div className="h-32 rounded" style={{backgroundColor: '#E8DCC4'}}></div>
-              </div>
-              <div>
-                <h3 className="text-xl font-bold mb-4">ARTBOOK</h3>
-                <div className="h-32 rounded" style={{backgroundColor: '#E8DCC4'}}></div>
-              </div>
-            </div>
-            <div className="border-t pt-8">
-              <div className="flex justify-between items-center mb-4">
-                <div className="text-sm">ART & DESIGN © 2015 Rosuuri. All rights reserved.</div>
-                <div className="flex space-x-4">
-                  <a href="#" className="text-blue-500">X</a>
-                  <a href="#" className="text-pink-500">Instagram</a>
-                  <a href="#" className="text-purple-500">Twitch</a>
-                  <a href="#" className="text-green-500">Patreon</a>
-                </div>
-              </div>
-              <div className="text-sm text-gray-400">
-                Characters & relevant concepts in fanwork pieces belong to their respective owners.
-              </div>
-            </div>
-          </div>
-        </footer>
-      </div>
-    </div>
-  );
+  return <HomeClient galleryImages={galleryImages} conventionTableImages={conventionTableImages} />;
 }

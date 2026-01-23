@@ -10,12 +10,12 @@ interface GalleryImage {
   isLandscape?: boolean;
 }
 
-interface GalleryProps {
+interface ConventionTableGalleryProps {
   images: GalleryImage[];
   onModalChange?: (isOpen: boolean) => void;
 }
 
-export default function Gallery({ images, onModalChange }: GalleryProps) {
+export default function ConventionTableGallery({ images, onModalChange }: ConventionTableGalleryProps) {
   const [loadedImages, setLoadedImages] = useState<boolean[]>(new Array(images.length).fill(false));
   const [selectedImage, setSelectedImage] = useState<number | null>(null);
   const [showModal, setShowModal] = useState(false);
@@ -25,6 +25,15 @@ export default function Gallery({ images, onModalChange }: GalleryProps) {
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
   const [inView, setInView] = useState<boolean[]>(new Array(images.length).fill(false));
   const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
+
+  // Format image filename into a readable title
+  const formatTitle = (filename: string) => {
+    // Remove file extension and path
+    const nameWithoutExt = filename.split('/').pop()?.replace(/\.[^/.]+$/, '') || '';
+    // Add space before capital letters (except the first one) and numbers
+    const formatted = nameWithoutExt.replace(/([A-Z])/g, ' $1').replace(/([0-9]+)/g, ' $1').trim();
+    return formatted;
+  };
 
   const handleImageLoad = (index: number) => {
     setLoadedImages(prev => {
@@ -120,22 +129,25 @@ export default function Gallery({ images, onModalChange }: GalleryProps) {
     }
   };
 
-  // Reveal items on scroll
+  // Staggered reveal on scroll - one by one animation
   useEffect(() => {
     const observer = new IntersectionObserver(
       entries => {
         entries.forEach(entry => {
           const index = Number((entry.target as HTMLElement).dataset.index);
           if (entry.isIntersecting) {
-            setInView(prev => {
-              const next = [...prev];
-              next[index] = true;
-              return next;
-            });
+            // Add a slight delay based on index for staggered effect
+            setTimeout(() => {
+              setInView(prev => {
+                const next = [...prev];
+                next[index] = true;
+                return next;
+              });
+            }, index * 100); // 100ms delay between each image
           }
         });
       },
-      { threshold: 0.15 }
+      { threshold: 0.2 }
     );
 
     itemRefs.current.forEach((el) => {
@@ -147,26 +159,26 @@ export default function Gallery({ images, onModalChange }: GalleryProps) {
 
   return (
     <>
-      <div className="masonry-gallery">
+      <div className="convention-puzzle-grid">
         {images.map((image, index) => (
           <div
             key={index}
             ref={(el) => { itemRefs.current[index] = el; }}
             data-index={index}
-            className={`masonry-item ${loadedImages[index] ? 'loaded' : ''} ${inView[index] ? 'in-view' : ''} ${image.isLandscape ? 'landscape' : ''}`}
+            className={`puzzle-item ${loadedImages[index] ? 'loaded' : ''} ${inView[index] ? 'in-view' : ''}`}
             onClick={() => openLightbox(index)}
           >
             <img
               src={image.src}
               alt={image.alt}
               onLoad={() => handleImageLoad(index)}
-              className="gallery-image"
+              className="puzzle-image"
             />
           </div>
         ))}
       </div>
 
-      {/* Modal - same as CarouselSection */}
+      {/* Modal - same as Gallery */}
       {showModal && selectedImage !== null && (
         <div
           className="fixed inset-0 flex items-center justify-center z-50 bg-black"
@@ -197,21 +209,33 @@ export default function Gallery({ images, onModalChange }: GalleryProps) {
           ></div>
           
           {/* Content */}
-          <div className="relative w-full h-full flex items-center justify-center z-10">
-            <img
-              src={images[selectedImage].src}
-              alt={images[selectedImage].alt}
-              className={`w-full h-full object-contain ${
-                isInitialLoad ? 'transition-all duration-500 ease-out' : ''
-              } ${
-                isInitialLoad && imageLoaded ? 'scale-100 opacity-100' : isInitialLoad ? 'scale-0 opacity-0' : 'scale-100 opacity-100'
-              }`}
-              style={{
-                filter: imageLoaded ? 'blur(0px)' : 'blur(20px)',
-                transition: 'filter 0.3s ease-out, opacity 0.35s ease'
-              }}
-              onLoad={() => setImageLoaded(true)}
-            />
+          <div className="relative w-full h-full flex flex-col items-center justify-center z-10 p-8">
+            {/* Title */}
+            <div className="mb-6 text-center">
+              <h2 className="text-2xl md:text-4xl font-bold text-white" style={{ textShadow: '2px 2px 4px rgba(0,0,0,0.8)' }}>
+                {formatTitle(images[selectedImage].src)}
+              </h2>
+            </div>
+            
+            {/* Image Container - constrained height */}
+            <div className="flex items-center justify-center w-full" style={{ maxHeight: 'calc(100vh - 200px)' }}>
+              <img
+                src={images[selectedImage].src}
+                alt={images[selectedImage].alt}
+                className={`object-contain ${
+                  isInitialLoad ? 'transition-all duration-500 ease-out' : ''
+                } ${
+                  isInitialLoad && imageLoaded ? 'scale-100 opacity-100' : isInitialLoad ? 'scale-0 opacity-0' : 'scale-100 opacity-100'
+                }`}
+                style={{
+                  maxWidth: '90%',
+                  maxHeight: '100%',
+                  filter: imageLoaded ? 'blur(0px)' : 'blur(20px)',
+                  transition: 'filter 0.3s ease-out, opacity 0.35s ease'
+                }}
+                onLoad={() => setImageLoaded(true)}
+              />
+            </div>
             
             {/* Left Arrow */}
             <button
@@ -246,62 +270,59 @@ export default function Gallery({ images, onModalChange }: GalleryProps) {
       )}
 
       <style jsx>{`
-        .masonry-gallery {
-          column-count: 1;
-          column-gap: 20px;
-          padding: 40px 20px;
+        .convention-puzzle-grid {
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          gap: 0;
+          padding: 20px;
           max-width: 1400px;
           margin: 0 auto;
         }
 
         @media (min-width: 640px) {
-          .masonry-gallery {
-            column-count: 2;
+          .convention-puzzle-grid {
+            grid-template-columns: repeat(3, 1fr);
           }
         }
 
         @media (min-width: 1024px) {
-          .masonry-gallery {
-            column-count: 3;
+          .convention-puzzle-grid {
+            grid-template-columns: repeat(4, 1fr);
           }
         }
 
-        .masonry-item {
-          break-inside: avoid;
-          margin-bottom: 20px;
+        .puzzle-item {
+          position: relative;
+          width: 100%;
+          aspect-ratio: 1 / 1;
           cursor: pointer;
           opacity: 0;
-          transform: translateY(24px);
-          transition: opacity 0.6s ease, transform 0.6s ease;
+          transform: translateY(40px) scale(0.9);
+          transition: opacity 0.8s ease, transform 0.8s ease;
           overflow: hidden;
-          border-radius: 8px;
+          border: 1px solid #e0e0e0;
         }
 
-        .masonry-item.in-view {
+        .puzzle-item.in-view {
           opacity: 1;
-          transform: translateY(0);
+          transform: translateY(0) scale(1);
         }
 
-        .masonry-item:hover {
+        .puzzle-item:hover {
           z-index: 10;
         }
 
-        .gallery-image {
+        .puzzle-image {
           width: 100%;
           height: 100%;
-          display: block;
           object-fit: cover;
           object-position: center;
           transition: transform 0.6s ease-out;
+          display: block;
         }
 
-        .masonry-item:hover .gallery-image {
+        .puzzle-item:hover .puzzle-image {
           transform: scale(1.2);
-        }
-
-        .masonry-item.landscape {
-          column-span: all;
-          margin-bottom: 20px;
         }
       `}</style>
     </>
