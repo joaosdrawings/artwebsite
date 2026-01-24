@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { useEffect, useState, useCallback, useRef } from 'react';
 
 interface GalleryImage {
@@ -48,14 +49,12 @@ export default function ConventionTableGallery({ images, onModalChange }: Conven
     setShowModal(true);
     setImageLoaded(false);
     setIsInitialLoad(true);
-    document.body.style.overflow = 'hidden';
     onModalChange?.(true);
   };
 
   const closeLightbox = useCallback(() => {
     setShowModal(false);
     setSelectedImage(null);
-    document.body.style.overflow = '';
     onModalChange?.(false);
   }, [onModalChange]);
 
@@ -157,6 +156,16 @@ export default function ConventionTableGallery({ images, onModalChange }: Conven
     return () => observer.disconnect();
   }, [images.length]);
 
+  // Lock body scroll when modal is open
+  useEffect(() => {
+    if (!showModal) return undefined;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [showModal]);
+
   return (
     <>
       <div className="convention-puzzle-grid">
@@ -165,14 +174,17 @@ export default function ConventionTableGallery({ images, onModalChange }: Conven
             key={index}
             ref={(el) => { itemRefs.current[index] = el; }}
             data-index={index}
-            className={`puzzle-item ${loadedImages[index] ? 'loaded' : ''} ${inView[index] ? 'in-view' : ''}`}
+            className={`puzzle-item hover-zoom ${loadedImages[index] ? 'loaded' : ''} ${inView[index] ? 'in-view' : ''}`}
             onClick={() => openLightbox(index)}
           >
-            <img
+            <Image
               src={image.src}
               alt={image.alt}
+              fill
+              sizes="(min-width:1024px) 25vw, (min-width:640px) 33vw, 50vw"
               onLoad={() => handleImageLoad(index)}
               className="puzzle-image"
+              style={{ objectFit: 'cover', objectPosition: 'center' }}
             />
           </div>
         ))}
@@ -188,18 +200,20 @@ export default function ConventionTableGallery({ images, onModalChange }: Conven
           onTouchEnd={handleTouchEnd}
         >
           {/* Blurred background image */}
-          <img
-            src={images[selectedImage].src}
-            alt="Blurred background"
-            className="absolute inset-0 w-full h-full"
-            style={{
-              objectFit: 'cover',
-              objectPosition: 'center',
-              filter: 'blur(15px) brightness(0.4)',
-              transform: 'scale(1.5)',
-              zIndex: 0
-            }}
-          />
+          <div className="absolute inset-0 w-full h-full" style={{ zIndex: 0 }}>
+            <Image
+              src={images[selectedImage].src}
+              alt="Blurred background"
+              fill
+              sizes="100vw"
+              style={{
+                objectFit: 'cover',
+                objectPosition: 'center',
+                filter: 'blur(15px) brightness(0.4)',
+                transform: 'scale(1.5)'
+              }}
+            />
+          </div>
           
           {/* Semi-transparent overlay */}
           <div 
@@ -219,9 +233,11 @@ export default function ConventionTableGallery({ images, onModalChange }: Conven
             
             {/* Image Container - constrained height */}
             <div className="flex items-center justify-center w-full" style={{ maxHeight: 'calc(100vh - 200px)' }}>
-              <img
+              <Image
                 src={images[selectedImage].src}
                 alt={images[selectedImage].alt}
+                width={images[selectedImage].width}
+                height={images[selectedImage].height}
                 className={`object-contain ${
                   isInitialLoad ? 'transition-all duration-500 ease-out' : ''
                 } ${
@@ -313,16 +329,7 @@ export default function ConventionTableGallery({ images, onModalChange }: Conven
         }
 
         .puzzle-image {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          object-position: center;
-          transition: transform 0.6s ease-out;
           display: block;
-        }
-
-        .puzzle-item:hover .puzzle-image {
-          transform: scale(1.2);
         }
       `}</style>
     </>

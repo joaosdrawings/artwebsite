@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 
 export default function DynamicHeader() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -21,11 +22,11 @@ export default function DynamicHeader() {
 
   return (
     <>
-      <header className={`sticky top-0 z-[100] transition-all duration-500 flex justify-between items-center text-white p-4 ${
+      <header className={`sticky top-0 z-100 transition-all duration-500 flex justify-between items-center text-white p-4 ${
         isScrolled ? 'md:bg-[#FAF9F6]' : 'md:p-8'
       }`} style={{color: isScrolled ? '#2C2C2C' : 'white'}}>
         {/* Logo */}
-        <a href="/" className="flex items-center transition-transform hover:scale-105 duration-300">
+        <Link href="/" className="flex items-center transition-transform hover:scale-105 duration-300">
           <Image 
             src="/images/logo/logo5.PNG" 
             alt="Moita Artwork" 
@@ -36,7 +37,7 @@ export default function DynamicHeader() {
               height: 'auto'
             }}
           />
-        </a>
+        </Link>
         
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center space-x-2">
@@ -125,7 +126,7 @@ export default function DynamicHeader() {
 
         {/* Mobile Hamburger */}
         <button 
-          className="md:hidden z-[110] w-10 h-10 flex flex-col justify-center items-center relative ml-auto"
+          className="md:hidden z-110 w-10 h-10 flex flex-col justify-center items-center relative ml-auto"
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           aria-label="Toggle menu"
         >
@@ -157,7 +158,7 @@ export default function DynamicHeader() {
 
       {/* Mobile Menu Overlay */}
       <div 
-        className={`md:hidden fixed inset-0 z-[90] transition-opacity duration-300 ${isMobileMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
+        className={`md:hidden fixed inset-0 z-90 transition-opacity duration-300 ${isMobileMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
         style={{backgroundColor: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(4px)'}}
         onClick={() => setIsMobileMenuOpen(false)}
       >

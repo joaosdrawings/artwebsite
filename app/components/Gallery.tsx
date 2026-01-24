@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { useEffect, useState, useCallback, useRef } from 'react';
 
 interface GalleryImage {
@@ -39,14 +40,12 @@ export default function Gallery({ images, onModalChange }: GalleryProps) {
     setShowModal(true);
     setImageLoaded(false);
     setIsInitialLoad(true);
-    document.body.style.overflow = 'hidden';
     onModalChange?.(true);
   };
 
   const closeLightbox = useCallback(() => {
     setShowModal(false);
     setSelectedImage(null);
-    document.body.style.overflow = '';
     onModalChange?.(false);
   }, [onModalChange]);
 
@@ -145,6 +144,16 @@ export default function Gallery({ images, onModalChange }: GalleryProps) {
     return () => observer.disconnect();
   }, [images.length]);
 
+  // Lock body scroll when modal is open
+  useEffect(() => {
+    if (!showModal) return undefined;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [showModal]);
+
   return (
     <>
       <div className="masonry-gallery">
@@ -153,14 +162,17 @@ export default function Gallery({ images, onModalChange }: GalleryProps) {
             key={index}
             ref={(el) => { itemRefs.current[index] = el; }}
             data-index={index}
-            className={`masonry-item ${loadedImages[index] ? 'loaded' : ''} ${inView[index] ? 'in-view' : ''} ${image.isLandscape ? 'landscape' : 'portrait'}`}
+            className={`masonry-item hover-zoom ${loadedImages[index] ? 'loaded' : ''} ${inView[index] ? 'in-view' : ''} ${image.isLandscape ? 'landscape' : 'portrait'}`}
             onClick={() => openLightbox(index)}
           >
-            <img
+            <Image
               src={image.src}
               alt={image.alt}
+              fill
+              sizes="100vw"
               onLoad={() => handleImageLoad(index)}
               className="gallery-image"
+              style={{ objectFit: 'cover', objectPosition: 'center' }}
             />
           </div>
         ))}
@@ -176,18 +188,20 @@ export default function Gallery({ images, onModalChange }: GalleryProps) {
           onTouchEnd={handleTouchEnd}
         >
           {/* Blurred background image */}
-          <img
-            src={images[selectedImage].src}
-            alt="Blurred background"
-            className="absolute inset-0 w-full h-full"
-            style={{
-              objectFit: 'cover',
-              objectPosition: 'center',
-              filter: 'blur(15px) brightness(0.4)',
-              transform: 'scale(1.5)',
-              zIndex: 0
-            }}
-          />
+          <div className="absolute inset-0 w-full h-full" style={{ zIndex: 0 }}>
+            <Image
+              src={images[selectedImage].src}
+              alt="Blurred background"
+              fill
+              sizes="100vw"
+              style={{
+                objectFit: 'cover',
+                objectPosition: 'center',
+                filter: 'blur(15px) brightness(0.4)',
+                transform: 'scale(1.5)'
+              }}
+            />
+          </div>
           
           {/* Semi-transparent overlay */}
           <div 
@@ -198,9 +212,11 @@ export default function Gallery({ images, onModalChange }: GalleryProps) {
           
           {/* Content */}
           <div className="relative w-full h-full flex items-center justify-center z-10">
-            <img
+            <Image
               src={images[selectedImage].src}
               alt={images[selectedImage].alt}
+              width={images[selectedImage].width}
+              height={images[selectedImage].height}
               className={`w-full h-full object-contain ${
                 isInitialLoad ? 'transition-all duration-500 ease-out' : ''
               } ${
@@ -255,6 +271,15 @@ export default function Gallery({ images, onModalChange }: GalleryProps) {
           margin: 0 auto;
         }
 
+        /* Ensure tiles have height at all breakpoints */
+        .masonry-item.portrait {
+          aspect-ratio: 2 / 3;
+        }
+
+        .masonry-item.landscape {
+          aspect-ratio: 3 / 2;
+        }
+
         @media (min-width: 640px) {
           .masonry-gallery {
             grid-template-columns: repeat(2, 1fr);
@@ -287,8 +312,7 @@ export default function Gallery({ images, onModalChange }: GalleryProps) {
           transform: translateY(24px);
           transition: opacity 0.6s ease, transform 0.6s ease;
           overflow: hidden;
-          width: 100%;
-          height: 100%;
+          position: relative;
         }
 
         .masonry-item.in-view {
@@ -301,16 +325,7 @@ export default function Gallery({ images, onModalChange }: GalleryProps) {
         }
 
         .gallery-image {
-          width: 100%;
-          height: 100%;
           display: block;
-          object-fit: cover;
-          object-position: center;
-          transition: transform 0.6s ease-out;
-        }
-
-        .masonry-item:hover .gallery-image {
-          transform: scale(1.05);
         }
       `}</style>
     </>

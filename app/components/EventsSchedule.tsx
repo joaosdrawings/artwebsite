@@ -1,5 +1,7 @@
 'use client';
 
+import Image from 'next/image';
+
 interface Event {
   name: string;
   dates: string;
@@ -23,15 +25,15 @@ export default function EventsSchedule() {
       month: 'February',
       day: '01',
       events: [
-        { name: 'Anime Washington 2026', dates: 'Feb 6-8', url: 'https://animewashington.com' },
-        { name: 'Isekai anime con', dates: 'Feb 20-22' }
+        { name: 'Anime Washington 2026', dates: 'Feb 6-8', url: 'https://animewashington.com'},
+        { name: 'Isekai anime con', dates: 'Feb 20-22', url: 'https://isekaianimecon.com' }
       ]
     },
     {
       month: 'March',
       day: '21',
       events: [
-        { name: 'Anime Las Vegas', dates: 'March 21-22' }
+        { name: 'Anime Las Vegas', dates: 'March 21-22', url: 'https://animelasvegas.com'  }
       ]
     },
     {
@@ -43,7 +45,7 @@ export default function EventsSchedule() {
       month: 'May',
       day: '15',
       events: [
-        { name: 'Gem state comic con', dates: 'May 15-17' }
+        { name: 'Gem state comic con', dates: 'May 15-17', url: 'https://gemstatecomiccon.com'  }
       ]
     },
     {
@@ -55,22 +57,22 @@ export default function EventsSchedule() {
       month: 'July',
       day: '25',
       events: [
-        { name: 'Anime Matsuri', dates: 'July 25-26' }
+        { name: 'Anime Matsuri', dates: 'July 25-26', url: 'https://animematsuri.com'  }
       ]
     },
     {
       month: 'August',
       day: '08',
       events: [
-        { name: 'All Minnesota Anime', dates: 'Aug 8-9' },
-        { name: 'Nostalgia con SLC', dates: 'Aug 15-16' }
+        { name: 'Big Minneapolis Anime', dates: 'Aug 8-9', url: 'https://bigminneapolisanime.com'  },
+        { name: 'Nostalgia con SLC', dates: 'Aug 15-16', url: 'https://www.thenostalgiacon.com/saltlakehome26'  }
       ]
     },
     {
       month: 'September',
       day: '19',
       events: [
-        { name: 'Anime ID', dates: 'Sep 19-20' }
+        { name: 'Anime ID', dates: 'Sep 19-20', url: 'https://animeidaho.com'  }
       ]
     },
     {
@@ -97,20 +99,26 @@ export default function EventsSchedule() {
         <h2 className="text-3xl font-bold text-center mb-12" style={{ color: 'var(--salmon)', textTransform: 'uppercase' }}>Convention Schedule</h2>
         {/* Mobile/Tablet header image */}
         <div className="flex justify-center mb-8 md:hidden">
-          <img
+          <Image
             src="/images/assets/events.png"
             alt="Events"
-            className="w-auto calendar-header-img"
+            width={400}
+            height={240}
+            className="w-auto h-auto calendar-header-img"
+            priority
           />
         </div>
 
         <div className="grid md:grid-cols-[320px_1fr] gap-8 items-start">
           {/* Desktop left-side full-height image */}
           <div className="hidden md:flex">
-            <img
+            <Image
               src="/images/assets/eventsfull.png"
               alt="Events"
-              className="w-full calendar-side-img"
+              width={520}
+              height={900}
+              className="w-full h-auto calendar-side-img"
+              priority
             />
           </div>
 

@@ -43,7 +43,7 @@
 .calendar-header-title {
   font-size: 2em;
   line-height: 1em;
-  text-transform: lowercase;
+  text-transform: capitalize;
   font-weight: 700;
 }
 .calendar-events-list {

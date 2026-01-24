@@ -12,72 +12,91 @@ export default function Carousel({ items, speed = 3000 }: CarouselProps) {
   const nextBtnRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
-    const content = contentRef.current;
+    const contentEl = contentRef.current;
     const prevBtn = prevBtnRef.current;
     const nextBtn = nextBtnRef.current;
-    if (!content || !prevBtn || !nextBtn) return;
+    if (!contentEl || !prevBtn || !nextBtn) return;
+
+    const el = contentEl; // Non-null after guard
 
     const carouselLength = items.length;
-    const width = content.clientWidth / carouselLength; // Assuming full width per item
+    if (carouselLength === 0) return;
+
+    const width = el.clientWidth / carouselLength; // Assuming full width per item
     let count = width;
     const counterIncrement = width;
     let int: NodeJS.Timeout;
 
     // Initial transform
-    content.style.transform = `translateX(-${width}px)`;
+    el.style.transform = `translateX(-${width}px)`;
 
     function timer() {
       if (count >= counterIncrement * (carouselLength - 1)) {
         count = 0;
-        content.style.transform = `translateX(-${count}px)`;
+        el.style.transform = `translateX(-${count}px)`;
       }
       count += counterIncrement;
-      content.style.transform = `translateX(-${count}px)`;
+      el.style.transform = `translateX(-${count}px)`;
     }
 
     int = setInterval(timer, speed);
 
     // Click events
-    prevBtn.addEventListener('click', () => {
+    const handlePrevClick = () => {
       count -= width;
-      content.style.transform = `translateX(-${count}px)`;
+      el.style.transform = `translateX(-${count}px)`;
       if (count < 0) {
         count = counterIncrement * (carouselLength - 2);
-        content.style.transform = `translateX(-${count}px)`;
+        el.style.transform = `translateX(-${count}px)`;
       }
-    });
+    };
 
-    nextBtn.addEventListener('click', () => {
+    const handleNextClick = () => {
       count += width;
-      content.style.transform = `translateX(-${count}px)`;
+      el.style.transform = `translateX(-${count}px)`;
       if (count >= counterIncrement * carouselLength) {
         count = counterIncrement;
-        content.style.transform = `translateX(-${count}px)`;
+        el.style.transform = `translateX(-${count}px)`;
       }
-    });
+    };
 
     // Hover effects
-    prevBtn.addEventListener('mouseenter', () => {
-      content.style.transform = `translateX(-${count - 50}px)`;
+    const handlePrevEnter = () => {
+      el.style.transform = `translateX(-${count - 50}px)`;
       clearInterval(int);
-    });
-    prevBtn.addEventListener('mouseleave', () => {
-      content.style.transform = `translateX(-${count}px)`;
-      int = setInterval(timer, speed);
-    });
+    };
 
-    nextBtn.addEventListener('mouseenter', () => {
-      content.style.transform = `translateX(-${count + 50}px)`;
-      clearInterval(int);
-    });
-    nextBtn.addEventListener('mouseleave', () => {
-      content.style.transform = `translateX(-${count}px)`;
+    const handlePrevLeave = () => {
+      el.style.transform = `translateX(-${count}px)`;
       int = setInterval(timer, speed);
-    });
+    };
+
+    const handleNextEnter = () => {
+      el.style.transform = `translateX(-${count + 50}px)`;
+      clearInterval(int);
+    };
+
+    const handleNextLeave = () => {
+      el.style.transform = `translateX(-${count}px)`;
+      int = setInterval(timer, speed);
+    };
+
+    prevBtn.addEventListener('click', handlePrevClick);
+    prevBtn.addEventListener('mouseenter', handlePrevEnter);
+    prevBtn.addEventListener('mouseleave', handlePrevLeave);
+
+    nextBtn.addEventListener('click', handleNextClick);
+    nextBtn.addEventListener('mouseenter', handleNextEnter);
+    nextBtn.addEventListener('mouseleave', handleNextLeave);
 
     return () => {
       clearInterval(int);
-      // Remove event listeners if needed, but since component unmounts, ok
+      prevBtn.removeEventListener('click', handlePrevClick);
+      prevBtn.removeEventListener('mouseenter', handlePrevEnter);
+      prevBtn.removeEventListener('mouseleave', handlePrevLeave);
+      nextBtn.removeEventListener('click', handleNextClick);
+      nextBtn.removeEventListener('mouseenter', handleNextEnter);
+      nextBtn.removeEventListener('mouseleave', handleNextLeave);
     };
   }, [items, speed]);
 

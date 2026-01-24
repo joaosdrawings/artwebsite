@@ -60,3 +60,21 @@
 .ring-right span{
     background-color: red!important;
 }
+
+/* Global hover zoom utility */
+.hover-zoom {
+    position: relative;
+    overflow: hidden;
+}
+
+.hover-zoom .gallery-image,
+.hover-zoom .puzzle-image {
+    transition: transform 0.6s ease-out;
+    transform-origin: center center;
+    will-change: transform;
+}
+
+.hover-zoom:hover .gallery-image,
+.hover-zoom:hover .puzzle-image {
+    transform: scale(1.12);
+}

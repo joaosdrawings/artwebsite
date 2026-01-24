@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 import Birds from './Birds';
 
@@ -16,15 +17,6 @@ export default function ParallaxContent() {
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    // Check if images are already loaded (cached)
-    if (backgroundRef.current?.querySelector('img')?.complete) {
-      setBackgroundLoaded(true);
-    }
-    if (foregroundRef.current?.querySelector('img')?.complete) {
-      setForegroundLoaded(true);
-    }
-
-    // Check screen size
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 1024);
     };
@@ -45,7 +37,7 @@ export default function ParallaxContent() {
     const startingPoint = path.getPointAtLength(0);
     const PATH_SEGMENTS = 600;
 
-    let pathPoints: Array<{ type: string; x: number; y: number }> = [
+    const pathPoints: Array<{ type: string; x: number; y: number }> = [
       { type: 'M', x: startingPoint.x, y: startingPoint.y }
     ];
 
@@ -104,7 +96,7 @@ export default function ParallaxContent() {
       const elapsed = timestamp - start;
 
       if (previousTimeStamp !== timestamp) {
-        let rawPercentage = Math.min((1 / duration) * elapsed, 1.0);
+        const rawPercentage = Math.min((1 / duration) * elapsed, 1.0);
         const percentage = isReverse ? 1 - easeOut(rawPercentage) : easeOut(rawPercentage);
 
         updatePathElement(pathPoints, percentage);
@@ -207,10 +199,13 @@ export default function ParallaxContent() {
           zIndex: 0
         }}
       >
-        <img
+        <Image
           src="/images/hero/background.PNG"
           alt="Hero background"
-          className="w-full h-full object-cover object-top"
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover object-top"
           style={{
             filter: backgroundLoaded ? 'blur(0px)' : 'blur(10px)',
             transition: 'filter 0.3s ease-out',
@@ -235,10 +230,13 @@ export default function ParallaxContent() {
           zIndex: 2
         }}
       >
-        <img
+        <Image
           src="/images/hero/foreground.PNG"
           alt="Hero foreground"
-          className="w-full h-full object-cover object-top"
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover object-top"
           style={{
             filter: foregroundLoaded ? 'blur(0px)' : 'blur(10px)',
             transition: 'filter 0.3s ease-out',

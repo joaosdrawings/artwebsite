@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import Image from 'next/image';
 import DynamicHeader from './DynamicHeader';
 import ParallaxContent from './ParallaxContent';
 import Gallery from './Gallery';
@@ -27,19 +28,33 @@ export default function HomeClient({ galleryImages, conventionTableImages }: Hom
   const scrollFrame = useRef<number | null>(null);
   const latestScroll = useRef(0);
 
+  const computeContentOpacity = () => {
+    const heroHeight = window.innerHeight * 1.05 - 100;
+    const fadeStartScroll = heroHeight * 0.6; // Start fading at 60%
+    const fadeEndScroll = heroHeight * 0.95; // Complete at 95%
+    const scrollProgress = Math.max(0, latestScroll.current - fadeStartScroll);
+    const fadeRange = fadeEndScroll - fadeStartScroll;
+    const opacity = Math.min(1, fadeRange > 0 ? scrollProgress / fadeRange : 1);
+    if (contentRef.current) {
+      contentRef.current.style.opacity = opacity.toString();
+      contentRef.current.style.pointerEvents = opacity < 0.5 ? 'none' : 'auto';
+    }
+  };
+
   useEffect(() => {
     const updateContentOpacity = () => {
       scrollFrame.current = null;
-      const heroHeight = window.innerHeight * 1.05 - 100;
-      const fadeEndScroll = heroHeight * 0.8;
-      const opacity = Math.min(1, latestScroll.current / fadeEndScroll);
-      if (contentRef.current) {
-        contentRef.current.style.opacity = opacity.toString();
-        contentRef.current.style.pointerEvents = opacity < 0.5 ? 'none' : 'auto';
-      }
+      computeContentOpacity();
     };
 
     const handleScroll = () => {
+      if (isModalOpen) {
+        if (contentRef.current) {
+          contentRef.current.style.opacity = '1';
+          contentRef.current.style.pointerEvents = 'auto';
+        }
+        return;
+      }
       latestScroll.current = window.pageYOffset;
       if (scrollFrame.current === null) {
         scrollFrame.current = window.requestAnimationFrame(updateContentOpacity);
@@ -56,7 +71,16 @@ export default function HomeClient({ galleryImages, conventionTableImages }: Hom
         cancelAnimationFrame(scrollFrame.current);
       }
     };
-  }, []);
+  }, [isModalOpen]);
+
+  useEffect(() => {
+    if (isModalOpen && contentRef.current) {
+      contentRef.current.style.opacity = '1';
+      contentRef.current.style.pointerEvents = 'auto';
+      return;
+    }
+    computeContentOpacity();
+  }, [isModalOpen]);
 
   return (
     <div className="min-h-screen" style={{backgroundColor: '#FAF9F6', color: '#2C2C2C'}}>
@@ -154,19 +178,19 @@ export default function HomeClient({ galleryImages, conventionTableImages }: Hom
                 </div>
                 <div className="flex space-x-3">
                   <a href="https://www.pixiv.net/en/users/81398708" target="_blank" rel="noopener noreferrer" className="transition-transform hover:scale-110">
-                    <img src="/images/socials/pixiv.png" alt="Pixiv" className="w-10 h-10 rounded-lg" />
+                    <Image src="/images/socials/pixiv.png" alt="Pixiv" width={40} height={40} className="w-10 h-10 rounded-lg" />
                   </a>
                   <a href="https://www.instagram.com/moitaartwork/" target="_blank" rel="noopener noreferrer" className="transition-transform hover:scale-110">
-                    <img src="/images/socials/ig.png" alt="Instagram" className="w-10 h-10 rounded-lg" />
+                    <Image src="/images/socials/ig.png" alt="Instagram" width={40} height={40} className="w-10 h-10 rounded-lg" />
                   </a>
                   <a href="https://x.com/moitaartwork" target="_blank" rel="noopener noreferrer" className="transition-transform hover:scale-110">
-                    <img src="/images/socials/x.png" alt="X (Twitter)" className="w-10 h-10 rounded-lg" />
+                    <Image src="/images/socials/x.png" alt="X (Twitter)" width={40} height={40} className="w-10 h-10 rounded-lg" />
                   </a>
                   <a href="https://cara.app/notifications" target="_blank" rel="noopener noreferrer" className="transition-transform hover:scale-110">
-                    <img src="/images/socials/cara.png" alt="Cara" className="w-10 h-10 rounded-lg" />
+                    <Image src="/images/socials/cara.png" alt="Cara" width={40} height={40} className="w-10 h-10 rounded-lg" />
                   </a>
                   <a href="https://www.youtube.com/@MoitaArtwork" target="_blank" rel="noopener noreferrer" className="transition-transform hover:scale-110">
-                    <img src="/images/socials/yt.png" alt="YouTube" className="w-10 h-10 rounded-lg" />
+                    <Image src="/images/socials/yt.png" alt="YouTube" width={40} height={40} className="w-10 h-10 rounded-lg" />
                   </a>
                 </div>
               </div>
