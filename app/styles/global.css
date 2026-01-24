@@ -76,5 +76,5 @@
 
 .hover-zoom:hover .gallery-image,
 .hover-zoom:hover .puzzle-image {
-    transform: scale(1.03);
+        transform: scale(1.03);
 }

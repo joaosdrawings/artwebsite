@@ -84,7 +84,7 @@ export default function DynamicHeader() {
             onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#FFE8D6'}
             onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
           >
-            Events
+            Upcoming Events
           </a>
           <a 
             href="#instagram" 
