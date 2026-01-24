@@ -111,73 +111,53 @@ export default function HomeClient({ galleryImages, conventionTableImages }: Hom
 
         <InstagramFeed />
 
-        <section className="py-16 px-8 max-w-6xl mx-auto">
-          <h2 className="text-3xl font-bold mb-8">About Rosuuri</h2>
-          <p className="text-lg mb-4">
-            An illustrator who draws for game and publishing companies. She designs characters and illustrates for light novels, games, and art books.
-          </p>
-          <p className="text-lg mb-8">
-            A VTuber who streams art and more every Saturday on Twitch.
-          </p>
-          <a href="#" style={{color: '#E64A4A'}}>・・ ALL LINKS</a>
-        </section>
-
-        <section className="py-16 px-8 max-w-6xl mx-auto">
-          <h2 className="text-3xl font-bold mb-8">Contact</h2>
-          <p className="text-lg mb-4">
-            <a href="mailto:ART@ROSUURI.COM" style={{color: '#FF7E70'}}>ART@ROSUURI.COM</a>
-          </p>
-          <p className="mb-8">
-            For business inquiries, I accept work for games, light novels, illustration books, exhibitions, album/EP art, music videos, official merch, promotional art and more.
-          </p>
-          <p className="mb-8">
-            Please include the following in your email【Project Name, Materials, Schedule, and Budget】
-          </p>
-          <p className="mb-8">※English/日本語 = OK!</p>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div>
-              <h3 className="text-xl font-bold mb-4">Art Books</h3>
-              <div className="h-32 rounded-lg mb-4" style={{backgroundColor: '#F0EAD6'}}></div>
-              <a href="#" style={{color: '#E64A4A'}}>VIEW BOOKS</a>
-            </div>
-            <div>
-              <h3 className="text-xl font-bold mb-4">Events</h3>
-              <div className="h-32 rounded-lg mb-4" style={{backgroundColor: '#F0EAD6'}}></div>
-              <a href="#" style={{color: '#E64A4A'}}>VIEW EVENTS</a>
-            </div>
-          </div>
-        </section>
-
-        <footer className="py-16 px-8" style={{backgroundColor: '#F0EAD6'}}>
+        <footer id="contact" className="py-16 px-8" style={{backgroundColor: '#F0EAD6'}}>
           <div className="max-w-6xl mx-auto">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-8">
+              {/* About Section */}
               <div>
-                <h3 className="text-xl font-bold mb-4">Clients</h3>
-                <div className="space-y-2">
-                  <div className="h-16 rounded" style={{backgroundColor: '#E8DCC4'}}></div>
-                  <div className="h-16 rounded" style={{backgroundColor: '#E8DCC4'}}></div>
-                </div>
+                <h3 className="text-3xl font-bold mb-6">About Mo</h3>
+                <p className="text-lg mb-4">
+                  Mo is a US based artist born in California. Mo specializes in highly detailed character work of characters from anime, manga, and video game fandoms as well as original characters.
+                </p>
               </div>
+
+              {/* Contact Section */}
               <div>
-                <h3 className="text-xl font-bold mb-4">FIGURE</h3>
-                <div className="h-32 rounded" style={{backgroundColor: '#E8DCC4'}}></div>
-              </div>
-              <div>
-                <h3 className="text-xl font-bold mb-4">ARTBOOK</h3>
-                <div className="h-32 rounded" style={{backgroundColor: '#E8DCC4'}}></div>
+                <h3 className="text-3xl font-bold mb-6">Contact</h3>
+                <p className="text-lg mb-4">
+                  <a href="mailto:JOAOSDRAWINGS@GMAIL.COM" style={{color: '#FF7E70'}}>JOAOSDRAWINGS@GMAIL.COM</a>
+                </p>
+                <p className="mb-4">
+                  For business inquiries, please reach out via email with details about your project.
+                </p>
+                <p>※English/日本語 = OK!</p>
               </div>
             </div>
-            <div className="border-t pt-8">
-              <div className="flex justify-between items-center mb-4">
-                <div className="text-sm">ART & DESIGN © 2015 Rosuuri. All rights reserved.</div>
+
+            {/* Social Media & Copyright */}
+            <div className="border-t pt-8" style={{borderColor: '#E8DCC4'}}>
+              <div className="flex flex-col md:flex-row justify-between items-center gap-6 mb-4">
+                <div className="text-sm">ART & DESIGN © 2026 Moita Artwork. All rights reserved.</div>
                 <div className="flex space-x-4">
-                  <a href="#" className="text-blue-500">X</a>
-                  <a href="#" className="text-pink-500">Instagram</a>
-                  <a href="#" className="text-purple-500">Twitch</a>
-                  <a href="#" className="text-green-500">Patreon</a>
+                  <a href="https://www.pixiv.net/en/users/81398708" target="_blank" rel="noopener noreferrer" className="transition-transform hover:scale-110">
+                    <img src="/images/socials/pixiv.png" alt="Pixiv" className="w-10 h-10 rounded-lg" />
+                  </a>
+                  <a href="https://www.instagram.com/moitaartwork/" target="_blank" rel="noopener noreferrer" className="transition-transform hover:scale-110">
+                    <img src="/images/socials/ig.png" alt="Instagram" className="w-10 h-10 rounded-lg" />
+                  </a>
+                  <a href="https://x.com/moitaartwork" target="_blank" rel="noopener noreferrer" className="transition-transform hover:scale-110">
+                    <img src="/images/socials/x.png" alt="X (Twitter)" className="w-10 h-10 rounded-lg" />
+                  </a>
+                  <a href="https://cara.app/notifications" target="_blank" rel="noopener noreferrer" className="transition-transform hover:scale-110">
+                    <img src="/images/socials/cara.png" alt="Cara" className="w-10 h-10 rounded-lg" />
+                  </a>
+                  <a href="https://www.youtube.com/@MoitaArtwork" target="_blank" rel="noopener noreferrer" className="transition-transform hover:scale-110">
+                    <img src="/images/socials/yt.png" alt="YouTube" className="w-10 h-10 rounded-lg" />
+                  </a>
                 </div>
               </div>
-              <div className="text-sm text-gray-400">
+              <div className="text-sm text-gray-500 text-center md:text-left">
                 Characters & relevant concepts in fanwork pieces belong to their respective owners.
               </div>
             </div>

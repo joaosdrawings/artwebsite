@@ -12,10 +12,7 @@ export default function InstagramFeed() {
   ];
 
   return (
-    <section
-      className="py-16 px-8"
-      style={{ background: 'linear-gradient(135deg, #FAF9F6 0%, #F0EAD6 50%, #FFE8D6 100%)' }}
-    >
+    <section id="instagram" className="py-16 px-8">
       <h2 className="text-3xl font-bold text-center mb-8">
         <a href="https://www.instagram.com/moitaartwork/" target="_blank" rel="noopener noreferrer" style={{color: '#FF7E70'}}>
           @moitaartwork

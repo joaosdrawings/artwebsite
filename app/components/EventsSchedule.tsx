@@ -16,22 +16,22 @@ export default function EventsSchedule() {
   const schedule: MonthEvents[] = [
     {
       month: 'January',
-      day: '15',
-      events: [
-        { name: 'Anime Expo 2026', dates: 'Jan 15-18', url: 'https://www.anime-expo.org' },
-        { name: 'Anime Expo 2026', dates: 'Jan 15-18', url: 'https://www.anime-expo.org' }
-      ]
+      day: '01',
+      events: []
     },
     {
       month: 'February',
       day: '01',
-      events: []
+      events: [
+        { name: 'Anime Washington 2026', dates: 'Feb 6-8', url: 'https://animewashington.com' },
+        { name: 'Isekai anime con', dates: 'Feb 20-22' }
+      ]
     },
     {
       month: 'March',
       day: '21',
       events: [
-        { name: 'Sakura Con 2026', dates: 'March 21-23', url: 'https://www.sakuracon.org' }
+        { name: 'Anime Las Vegas', dates: 'March 21-22' }
       ]
     },
     {
@@ -41,9 +41,9 @@ export default function EventsSchedule() {
     },
     {
       month: 'May',
-      day: '09',
+      day: '15',
       events: [
-        { name: 'FanExpo Boston 2026', dates: 'May 9-11', url: 'https://www.fanexpoboston.com' }
+        { name: 'Gem state comic con', dates: 'May 15-17' }
       ]
     },
     {
@@ -53,29 +53,30 @@ export default function EventsSchedule() {
     },
     {
       month: 'July',
-      day: '23',
+      day: '25',
       events: [
-        { name: 'Comic-Con International', dates: 'July 23-26', url: 'https://www.comic-con.org' }
+        { name: 'Anime Matsuri', dates: 'July 25-26' }
       ]
     },
     {
       month: 'August',
-      day: '07',
+      day: '08',
       events: [
-        { name: 'Otakon 2026', dates: 'Aug 7-9', url: 'https://www.otakon.com' }
+        { name: 'All Minnesota Anime', dates: 'Aug 8-9' },
+        { name: 'Nostalgia con SLC', dates: 'Aug 15-16' }
       ]
     },
     {
       month: 'September',
-      day: '01',
-      events: []
+      day: '19',
+      events: [
+        { name: 'Anime ID', dates: 'Sep 19-20' }
+      ]
     },
     {
       month: 'October',
-      day: '08',
-      events: [
-        { name: 'New York Comic Con', dates: 'Oct 8-11', url: 'https://www.newyorkcomiccon.com' }
-      ]
+      day: '01',
+      events: []
     },
     {
       month: 'November',
@@ -84,10 +85,8 @@ export default function EventsSchedule() {
     },
     {
       month: 'December',
-      day: '19',
-      events: [
-        { name: 'Holiday Art Market', dates: 'Dec 19-21' }
-      ]
+      day: '01',
+      events: []
     }
   ];
 

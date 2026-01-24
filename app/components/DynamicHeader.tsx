@@ -21,13 +21,13 @@ export default function DynamicHeader() {
 
   return (
     <>
-      <header className={`sticky top-0 z-[100] transition-all duration-300 flex justify-between items-center text-white p-4 ${
-        isScrolled ? 'md:bg-[#FAF9F6] md:shadow-md' : 'md:p-8'
-      }`} style={{color: isScrolled ? '#2C2C2C' : 'white'}}>
+      <header className={`sticky top-0 z-[100] transition-all duration-500 flex justify-between items-center text-white p-4 ${
+        isScrolled ? 'md:bg-[#FAF9F6] md:shadow-lg' : 'md:p-8'
+      }`} style={{color: isScrolled ? '#2C2C2C' : 'white', borderBottom: isScrolled ? '2px solid #FFE8D6' : 'none'}}>
         {/* Logo */}
-        <a href="/" className="flex items-center">
+        <a href="/" className="flex items-center transition-transform hover:scale-105 duration-300">
           <Image 
-            src="/images/logo/logo3.PNG" 
+            src="/images/logo/logo5.PNG" 
             alt="Moita Artwork" 
             width={isScrolled ? 120 : 160}
             height={isScrolled ? 60 : 80}
@@ -39,14 +39,89 @@ export default function DynamicHeader() {
         </a>
         
         {/* Desktop Navigation */}
-        <div className="hidden md:flex items-center space-x-4">
-          <a href="/" style={{color: isScrolled ? '#2C2C2C' : 'white', textShadow: isScrolled ? 'none' : '2px 2px 4px rgba(0,0,0,0.8)'}}>Home</a>
-          <a href="#gallery" onClick={(e) => { e.preventDefault(); document.getElementById('gallery')?.scrollIntoView({ behavior: 'smooth' }); }} style={{color: isScrolled ? '#2C2C2C' : 'white', textShadow: isScrolled ? 'none' : '2px 2px 4px rgba(0,0,0,0.8)', cursor: 'pointer'}}>Gallery</a>
-          <a href="/#events" style={{color: isScrolled ? '#2C2C2C' : 'white', textShadow: isScrolled ? 'none' : '2px 2px 4px rgba(0,0,0,0.8)'}}>Convention Schedule</a>
-          <a href="#" style={{color: '#FF7E70', textShadow: isScrolled ? 'none' : '2px 2px 4px rgba(0,0,0,0.8)'}}>SHOP</a>
-          <Image src="https://static.parastorage.com/services/linguist-flags/1.969.0/assets/flags/corner/USA_2x.png" alt="English" width={24} height={16} style={{filter: isScrolled ? 'none' : 'drop-shadow(2px 2px 4px rgba(0,0,0,0.8))'}} />
-          <Image src="https://static.parastorage.com/services/linguist-flags/1.969.0/assets/flags/corner/JPN_2x.png" alt="Japanese" width={24} height={16} style={{filter: isScrolled ? 'none' : 'drop-shadow(2px 2px 4px rgba(0,0,0,0.8))'}} />
-        </div>
+        <nav className="hidden md:flex items-center space-x-2">
+          <a 
+            href="#gallery" 
+            onClick={(e) => { e.preventDefault(); document.getElementById('gallery')?.scrollIntoView({ behavior: 'smooth' }); }} 
+            className="px-4 py-2 rounded-full transition-all duration-300 hover:scale-105 font-semibold"
+            style={{
+              color: isScrolled ? '#2C2C2C' : 'white', 
+              textShadow: isScrolled ? 'none' : '2px 2px 4px rgba(0,0,0,0.8)', 
+              cursor: 'pointer',
+              backgroundColor: 'transparent'
+            }}
+            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#FFE8D6'}
+            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+          >
+            Gallery
+          </a>
+          <a 
+            href="#past-conventions" 
+            onClick={(e) => { e.preventDefault(); document.getElementById('past-conventions')?.scrollIntoView({ behavior: 'smooth' }); }} 
+            className="px-4 py-2 rounded-full transition-all duration-300 hover:scale-105 font-semibold"
+            style={{
+              color: isScrolled ? '#2C2C2C' : 'white', 
+              textShadow: isScrolled ? 'none' : '2px 2px 4px rgba(0,0,0,0.8)', 
+              cursor: 'pointer',
+              backgroundColor: 'transparent'
+            }}
+            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#FFE8D6'}
+            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+          >
+            Convention Tables
+          </a>
+          <a 
+            href="#events" 
+            onClick={(e) => { e.preventDefault(); document.getElementById('events')?.scrollIntoView({ behavior: 'smooth' }); }} 
+            className="px-4 py-2 rounded-full transition-all duration-300 hover:scale-105 font-semibold"
+            style={{
+              color: isScrolled ? '#2C2C2C' : 'white', 
+              textShadow: isScrolled ? 'none' : '2px 2px 4px rgba(0,0,0,0.8)', 
+              cursor: 'pointer',
+              backgroundColor: 'transparent'
+            }}
+            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#FFE8D6'}
+            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+          >
+            Events
+          </a>
+          <a 
+            href="#instagram" 
+            onClick={(e) => { e.preventDefault(); document.getElementById('instagram')?.scrollIntoView({ behavior: 'smooth' }); }} 
+            className="px-4 py-2 rounded-full transition-all duration-300 hover:scale-105 font-semibold"
+            style={{
+              color: isScrolled ? '#2C2C2C' : 'white', 
+              textShadow: isScrolled ? 'none' : '2px 2px 4px rgba(0,0,0,0.8)', 
+              cursor: 'pointer',
+              backgroundColor: 'transparent'
+            }}
+            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#FFE8D6'}
+            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+          >
+            Instagram
+          </a>
+          <a 
+            href="#contact" 
+            onClick={(e) => { e.preventDefault(); document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' }); }} 
+            className="px-5 py-2 rounded-full transition-all duration-300 hover:scale-110 font-bold"
+            style={{
+              color: 'white',
+              backgroundColor: '#FF7E70',
+              cursor: 'pointer',
+              boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = '#E64A4A';
+              e.currentTarget.style.boxShadow = '0 6px 12px rgba(0,0,0,0.2)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = '#FF7E70';
+              e.currentTarget.style.boxShadow = '0 4px 6px rgba(0,0,0,0.1)';
+            }}
+          >
+            Contact
+          </a>
+        </nav>
 
         {/* Mobile Hamburger */}
         <button 
@@ -92,51 +167,47 @@ export default function DynamicHeader() {
           onClick={(e) => e.stopPropagation()}
         >
           <div className="flex flex-col h-full">
-            <div className="flex-1 p-8 pt-24 space-y-8">
-              <a 
-                href="/" 
-                className="block text-2xl font-bold transition-colors hover:opacity-70"
-                style={{color: '#2C2C2C'}}
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                Home
-              </a>
+            <div className="flex-1 p-8 pt-24 space-y-6">
               <a 
                 href="#gallery" 
-                className="block text-2xl font-bold transition-colors hover:opacity-70"
+                className="block text-2xl font-bold transition-all hover:translate-x-2 hover:opacity-70"
                 style={{color: '#2C2C2C', cursor: 'pointer'}}
                 onClick={(e) => { e.preventDefault(); document.getElementById('gallery')?.scrollIntoView({ behavior: 'smooth' }); setIsMobileMenuOpen(false); }}
               >
                 Gallery
               </a>
               <a 
-                href="/#events" 
-                className="block text-2xl font-bold transition-colors hover:opacity-70"
-                style={{color: '#2C2C2C'}}
-                onClick={() => setIsMobileMenuOpen(false)}
+                href="#past-conventions" 
+                className="block text-2xl font-bold transition-all hover:translate-x-2 hover:opacity-70"
+                style={{color: '#2C2C2C', cursor: 'pointer'}}
+                onClick={(e) => { e.preventDefault(); document.getElementById('past-conventions')?.scrollIntoView({ behavior: 'smooth' }); setIsMobileMenuOpen(false); }}
               >
-                Convention Schedule
+                Convention Tables
               </a>
               <a 
-                href="#" 
-                className="block text-2xl font-bold transition-colors hover:opacity-70"
-                style={{color: '#FF7E70'}}
-                onClick={() => setIsMobileMenuOpen(false)}
+                href="#events" 
+                className="block text-2xl font-bold transition-all hover:translate-x-2 hover:opacity-70"
+                style={{color: '#2C2C2C', cursor: 'pointer'}}
+                onClick={(e) => { e.preventDefault(); document.getElementById('events')?.scrollIntoView({ behavior: 'smooth' }); setIsMobileMenuOpen(false); }}
               >
-                SHOP
+                Events
               </a>
-            </div>
-            
-            <div className="p-8 border-t" style={{borderColor: '#E8DCC4'}}>
-              <p className="text-sm mb-4" style={{color: '#666'}}>Language</p>
-              <div className="flex space-x-4">
-                <button className="transition-transform hover:scale-110">
-                  <Image src="https://static.parastorage.com/services/linguist-flags/1.969.0/assets/flags/corner/USA_2x.png" alt="English" width={40} height={27} />
-                </button>
-                <button className="transition-transform hover:scale-110">
-                  <Image src="https://static.parastorage.com/services/linguist-flags/1.969.0/assets/flags/corner/JPN_2x.png" alt="Japanese" width={40} height={27} />
-                </button>
-              </div>
+              <a 
+                href="#instagram" 
+                className="block text-2xl font-bold transition-all hover:translate-x-2 hover:opacity-70"
+                style={{color: '#2C2C2C', cursor: 'pointer'}}
+                onClick={(e) => { e.preventDefault(); document.getElementById('instagram')?.scrollIntoView({ behavior: 'smooth' }); setIsMobileMenuOpen(false); }}
+              >
+                Instagram
+              </a>
+              <a 
+                href="#contact" 
+                className="block text-2xl font-bold transition-all hover:translate-x-2 px-6 py-3 rounded-lg mt-4"
+                style={{color: 'white', backgroundColor: '#FF7E70', cursor: 'pointer'}}
+                onClick={(e) => { e.preventDefault(); document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' }); setIsMobileMenuOpen(false); }}
+              >
+                Contact
+              </a>
             </div>
           </div>
         </div>
