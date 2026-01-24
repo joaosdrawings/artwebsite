@@ -1,6 +1,7 @@
 'use client';
 
 import { useRef, useState, useEffect, useCallback } from 'react';
+import Image from 'next/image';
 import AnimatedButton from './AnimatedButton';
 
 interface CarouselSectionProps {
@@ -80,16 +81,24 @@ export default function CarouselSection({ id, title, images, onModalChange }: Ca
     setShowModal(true);
     setImageLoaded(false);
     setIsInitialLoad(true);
-    document.body.style.overflow = 'hidden';
     onModalChange?.(true);
   };
 
   const closeModal = useCallback(() => {
     setShowModal(false);
     setSelectedImage(null);
-    document.body.style.overflow = '';
     onModalChange?.(false);
   }, [onModalChange]);
+  // Lock body scroll when modal is open
+  useEffect(() => {
+    if (!showModal) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [showModal]);
+
 
   const goToPrevious = useCallback(() => {
     const newIndex = currentImageIndex > 0 ? currentImageIndex - 1 : images.length - 1;
@@ -197,28 +206,22 @@ export default function CarouselSection({ id, title, images, onModalChange }: Ca
               onClick={() => openModal(imageSrc || `/images/placeholder-${index + 1}.jpg`, index)}
             >
               {imageSrc && (
-                <img
-                  src={imageSrc}
-                  alt={`Illustration ${index + 1}`}
-                  style={{
-                    height: '450px',
-                    width: 'auto',
-                    minWidth: 'auto',
-                    maxWidth: 'none',
-                    display: 'block',
-                    objectFit: 'contain',
-                    filter: loadedThumbnails.has(index) ? 'blur(0px)' : 'blur(20px)',
-                    transition: 'filter 0.3s ease-out'
-                  }}
-                  loading="lazy"
-                  onLoad={(e) => {
-                    setLoadedThumbnails(prev => new Set(prev).add(index));
-                    // Also check if already complete (cached)
-                    if (e.currentTarget.complete) {
+                <div style={{ position: 'relative', height: '450px', width: 'auto' }}>
+                  <Image
+                    src={imageSrc}
+                    alt={`Illustration ${index + 1}`}
+                    fill
+                    sizes="(min-width:1024px) 50vw, 90vw"
+                    style={{
+                      objectFit: 'contain',
+                      filter: loadedThumbnails.has(index) ? 'blur(0px)' : 'blur(20px)',
+                      transition: 'filter 0.3s ease-out'
+                    }}
+                    onLoad={() => {
                       setLoadedThumbnails(prev => new Set(prev).add(index));
-                    }
-                  }}
-                />
+                    }}
+                  />
+                </div>
               )}
             </div>
           ))}
@@ -247,18 +250,20 @@ export default function CarouselSection({ id, title, images, onModalChange }: Ca
           onTouchEnd={handleTouchEnd}
         >
           {/* Blurred background image */}
-          <img
-            src={selectedImage}
-            alt="Blurred background"
-            className="absolute inset-0 w-full h-full"
-            style={{
-              objectFit: 'cover',
-              objectPosition: 'center',
-              filter: 'blur(15px) brightness(0.4)',
-              transform: 'scale(1.5)',
-              zIndex: 0
-            }}
-          />
+          <div className="absolute inset-0 w-full h-full" style={{ zIndex: 0 }}>
+            <Image
+              src={selectedImage}
+              alt="Blurred background"
+              fill
+              sizes="100vw"
+              style={{
+                objectFit: 'cover',
+                objectPosition: 'center',
+                filter: 'blur(15px) brightness(0.4)',
+                transform: 'scale(1.5)'
+              }}
+            />
+          </div>
           
           {/* Semi-transparent overlay */}
           <div 
@@ -269,15 +274,18 @@ export default function CarouselSection({ id, title, images, onModalChange }: Ca
           
           {/* Content */}
           <div className="relative w-full h-full flex items-center justify-center z-10">
-            <img
+            <Image
               src={selectedImage}
               alt="Full size illustration"
+              fill
+              sizes="100vw"
               className={`w-full h-full object-contain ${
                 isInitialLoad ? 'transition-all duration-500 ease-out' : ''
               } ${
                 isInitialLoad && imageLoaded ? 'scale-100 opacity-100' : isInitialLoad ? 'scale-0 opacity-0' : 'scale-100 opacity-100'
               }`}
               style={{
+                objectFit: 'contain',
                 filter: imageLoaded ? 'blur(0px)' : 'blur(20px)',
                 transition: 'filter 0.3s ease-out, opacity 0.35s ease'
               }}

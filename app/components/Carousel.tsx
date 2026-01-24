@@ -1,5 +1,6 @@
 'use client';
 import { useEffect, useRef } from 'react';
+import Image from 'next/image';
 
 interface CarouselProps {
   items: string[]; // Array of image URLs
@@ -105,7 +106,7 @@ export default function Carousel({ items, speed = 3000 }: CarouselProps) {
       <span ref={prevBtnRef} className="carousel-control-left"></span>
       <div className="carousel-content" ref={contentRef}>
         {items.map((item, index) => (
-          <img key={index} src={item} alt={`Slide ${index + 1}`} />
+          <Image key={index} src={item} alt={`Slide ${index + 1}`} fill sizes="100vw" style={{ objectFit: 'cover' }} />
         ))}
       </div>
       <span ref={nextBtnRef} className="carousel-control-right"></span>

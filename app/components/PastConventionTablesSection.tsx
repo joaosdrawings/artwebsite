@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo, useState, useEffect, useRef } from 'react';
-import CarouselSection from './CarouselSection';
+import Image from 'next/image';
 
 // Helper to format image name to title
 function formatImageTitle(filename: string) {
@@ -69,15 +69,22 @@ export default function PastConventionTablesSection({ onModalChange }: { onModal
     setSelectedImage(imageSrc);
     setCurrentImageIndex(index);
     setShowModal(true);
-    document.body.style.overflow = 'hidden';
     onModalChange?.(true);
   };
   const closeModal = () => {
     setShowModal(false);
     setSelectedImage(null);
-    document.body.style.overflow = '';
     onModalChange?.(false);
   };
+    // Lock body scroll when modal is open
+    useEffect(() => {
+      if (!showModal) return;
+      const previousOverflow = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+      return () => {
+        document.body.style.overflow = previousOverflow;
+      };
+    }, [showModal]);
   const goToPrevious = () => {
     const newIndex = currentImageIndex > 0 ? currentImageIndex - 1 : images.length - 1;
     setCurrentImageIndex(newIndex);
@@ -107,14 +114,14 @@ export default function PastConventionTablesSection({ onModalChange }: { onModal
           pointerEvents: 'none',
         }}
       >
-        <img
+        <Image
           src="/images/galleryImages/yumia.JPG"
           alt=""
+          fill
+          sizes="100vw"
           style={{
-            width: '100%',
-            height: '100%',
             objectFit: 'cover',
-            objectPosition: 'center',
+            objectPosition: 'center'
           }}
         />
       </div>
@@ -166,12 +173,15 @@ export default function PastConventionTablesSection({ onModalChange }: { onModal
               style={{scrollSnapAlign: 'start'}}
               onClick={() => openModal(imageSrc, index)}
             >
-              <img
-                src={imageSrc}
-                alt={formatImageTitle(imageSrc.split('/').pop() || '')}
-                style={{height: '450px', objectFit: 'contain', display: 'block'}}
-                loading="lazy"
-              />
+              <div style={{ position: 'relative', height: '450px', width: 'auto' }}>
+                <Image
+                  src={imageSrc}
+                  alt={formatImageTitle(imageSrc.split('/').pop() || '')}
+                  fill
+                  sizes="(min-width:1024px) 50vw, 90vw"
+                  style={{ objectFit: 'contain' }}
+                />
+              </div>
             </div>
           ))}
         </div>
@@ -197,12 +207,15 @@ export default function PastConventionTablesSection({ onModalChange }: { onModal
       {showModal && selectedImage && (
         <div className="fixed inset-0 flex items-center justify-center z-50 bg-black" onClick={closeModal}>
           {/* Blurred background image */}
-          <img
-            src={selectedImage}
-            alt="Blurred background"
-            className="absolute inset-0 w-full h-full"
-            style={{objectFit: 'cover', objectPosition: 'center', filter: 'blur(15px) brightness(0.4)', transform: 'scale(1.5)', zIndex: 0}}
-          />
+          <div className="absolute inset-0 w-full h-full" style={{ zIndex: 0 }}>
+            <Image
+              src={selectedImage}
+              alt="Blurred background"
+              fill
+              sizes="100vw"
+              style={{ objectFit: 'cover', objectPosition: 'center', filter: 'blur(15px) brightness(0.4)', transform: 'scale(1.5)' }}
+            />
+          </div>
           {/* Semi-transparent overlay */}
           <div className="absolute inset-0" style={{zIndex: 1, backgroundColor: 'rgba(0, 0, 0, 0.3)'}}></div>
           {/* Content */}
@@ -211,12 +224,15 @@ export default function PastConventionTablesSection({ onModalChange }: { onModal
             <div className="mb-4 text-white text-2xl font-bold text-center bg-black bg-opacity-50 px-4 py-2 rounded">
               {formatImageTitle(selectedImage.split('/').pop() || '')}
             </div>
-            <img
-              src={selectedImage}
-              alt={formatImageTitle(selectedImage.split('/').pop() || '')}
-              className="w-auto max-h-[80vh] object-contain"
-              style={{boxShadow: '0 0 40px rgba(0,0,0,0.7)'}}
-            />
+            <div className="relative" style={{ width: 'auto', height: '80vh' }}>
+              <Image
+                src={selectedImage}
+                alt={formatImageTitle(selectedImage.split('/').pop() || '')}
+                fill
+                sizes="100vw"
+                style={{ objectFit: 'contain', boxShadow: '0 0 40px rgba(0,0,0,0.7)' }}
+              />
+            </div>
             {/* Left Arrow */}
             <button onClick={e => {e.stopPropagation(); goToPrevious();}} className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white text-4xl bg-black bg-opacity-50 rounded-full w-12 h-12 flex items-center justify-center hover:bg-opacity-75">‹</button>
             {/* Right Arrow */}
