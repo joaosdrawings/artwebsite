@@ -18,9 +18,38 @@ export default function CarouselSection({ id, title, images, onModalChange }: Ca
   const [showModal, setShowModal] = useState(false);
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
-  const [imageLoaded, setImageLoaded] = useState(false);
-  const [isInitialLoad, setIsInitialLoad] = useState(true);
+  const [imageLoaded, setImageLoaded] = useState(true);
+  const [isInitialLoad, setIsInitialLoad] = useState(false);
   const [loadedThumbnails, setLoadedThumbnails] = useState<Set<number>>(new Set());
+  const preloadedRef = useRef(new Set<number>());
+
+  // Preload images in background after page load
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if ('requestIdleCallback' in window) {
+        requestIdleCallback(() => {
+          images.forEach((image, index) => {
+            if (!preloadedRef.current.has(index) && image) {
+              const img = new window.Image();
+              img.src = image;
+              preloadedRef.current.add(index);
+            }
+          });
+        });
+      } else {
+        setTimeout(() => {
+          images.forEach((image, index) => {
+            if (!preloadedRef.current.has(index) && image) {
+              const img = new window.Image();
+              img.src = image;
+              preloadedRef.current.add(index);
+            }
+          });
+        }, 2000);
+      }
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, [images]);
 
   const colors = [
     'bg-gray-300',
@@ -79,8 +108,8 @@ export default function CarouselSection({ id, title, images, onModalChange }: Ca
     setSelectedImage(imageSrc);
     setCurrentImageIndex(index);
     setShowModal(true);
-    setImageLoaded(false);
-    setIsInitialLoad(true);
+    setImageLoaded(true);
+    setIsInitialLoad(false);
     onModalChange?.(true);
   };
 
@@ -104,16 +133,12 @@ export default function CarouselSection({ id, title, images, onModalChange }: Ca
     const newIndex = currentImageIndex > 0 ? currentImageIndex - 1 : images.length - 1;
     setCurrentImageIndex(newIndex);
     setSelectedImage(images[newIndex] || `/images/placeholder-${newIndex + 1}.jpg`);
-    setIsInitialLoad(false);
-    setImageLoaded(false);
   }, [currentImageIndex, images]);
 
   const goToNext = useCallback(() => {
     const newIndex = currentImageIndex < images.length - 1 ? currentImageIndex + 1 : 0;
     setCurrentImageIndex(newIndex);
     setSelectedImage(images[newIndex] || `/images/placeholder-${newIndex + 1}.jpg`);
-    setIsInitialLoad(false);
-    setImageLoaded(false);
   }, [currentImageIndex, images]);
 
   // Keyboard navigation
@@ -282,12 +307,12 @@ export default function CarouselSection({ id, title, images, onModalChange }: Ca
               className={`w-full h-full object-contain ${
                 isInitialLoad ? 'transition-all duration-500 ease-out' : ''
               } ${
-                isInitialLoad && imageLoaded ? 'scale-100 opacity-100' : isInitialLoad ? 'scale-0 opacity-0' : 'scale-100 opacity-100'
+                 'scale-100 opacity-100'
               }`}
               style={{
                 objectFit: 'contain',
                 filter: 'blur(0px)',
-                transition: 'opacity 0.35s ease'
+                transition: 'none'
               }}
               onLoad={() => setImageLoaded(true)}
             />

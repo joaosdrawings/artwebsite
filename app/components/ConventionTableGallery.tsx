@@ -20,12 +20,41 @@ export default function ConventionTableGallery({ images, onModalChange }: Conven
   const [loadedImages, setLoadedImages] = useState<boolean[]>(new Array(images.length).fill(false));
   const [selectedImage, setSelectedImage] = useState<number | null>(null);
   const [showModal, setShowModal] = useState(false);
-  const [imageLoaded, setImageLoaded] = useState(false);
-  const [isInitialLoad, setIsInitialLoad] = useState(true);
+  const [imageLoaded, setImageLoaded] = useState(true);
+  const [isInitialLoad, setIsInitialLoad] = useState(false);
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
   const [inView, setInView] = useState<boolean[]>(new Array(images.length).fill(false));
   const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const preloadedRef = useRef(new Set<number>());
+
+  // Preload images in background after page load
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if ('requestIdleCallback' in window) {
+        requestIdleCallback(() => {
+          images.forEach((image, index) => {
+            if (!preloadedRef.current.has(index)) {
+              const img = new window.Image();
+              img.src = image.src;
+              preloadedRef.current.add(index);
+            }
+          });
+        });
+      } else {
+        setTimeout(() => {
+          images.forEach((image, index) => {
+            if (!preloadedRef.current.has(index)) {
+              const img = new window.Image();
+              img.src = image.src;
+              preloadedRef.current.add(index);
+            }
+          });
+        }, 2000);
+      }
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, [images]);
 
   // Format image filename into a readable title
   const formatTitle = (filename: string) => {
@@ -47,8 +76,8 @@ export default function ConventionTableGallery({ images, onModalChange }: Conven
   const openLightbox = (index: number) => {
     setSelectedImage(index);
     setShowModal(true);
-    setImageLoaded(false);
-    setIsInitialLoad(true);
+    setImageLoaded(true);
+    setIsInitialLoad(false);
     onModalChange?.(true);
   };
 
@@ -62,16 +91,12 @@ export default function ConventionTableGallery({ images, onModalChange }: Conven
     if (selectedImage === null) return;
     const newIndex = selectedImage > 0 ? selectedImage - 1 : images.length - 1;
     setSelectedImage(newIndex);
-    setIsInitialLoad(false);
-    setImageLoaded(false);
   }, [selectedImage, images.length]);
 
   const goToNext = useCallback(() => {
     if (selectedImage === null) return;
     const newIndex = selectedImage < images.length - 1 ? selectedImage + 1 : 0;
     setSelectedImage(newIndex);
-    setIsInitialLoad(false);
-    setImageLoaded(false);
   }, [selectedImage, images.length]);
 
   // Keyboard navigation
@@ -238,17 +263,14 @@ export default function ConventionTableGallery({ images, onModalChange }: Conven
                 alt={images[selectedImage].alt}
                 width={images[selectedImage].width}
                 height={images[selectedImage].height}
-                className={`object-contain ${
-                  isInitialLoad ? 'transition-all duration-500 ease-out' : ''
-                } ${
-                  isInitialLoad && imageLoaded ? 'scale-100 opacity-100' : isInitialLoad ? 'scale-0 opacity-0' : 'scale-100 opacity-100'
-                }`}
+                className={`object-contain`}
                 style={{
                   maxWidth: '90%',
                   maxHeight: '100%',
                   filter: 'blur(0px)',
-                  transition: 'opacity 0.35s ease'
+                  transition: 'none'
                 }}
+                priority
                 onLoad={() => setImageLoaded(true)}
               />
             </div>
