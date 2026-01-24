@@ -157,11 +157,11 @@ export default function ParallaxContent() {
         foregroundRef.current.style.transform = `translate3d(0, ${scrolled * -0.15}px, 0)`;
       }
 
-      // Fade out hero based on scroll: start at 25% height, finish at 80%
+      // Fade out hero based on scroll: start at 60% height, finish at 95%
       if (containerRef.current) {
         const heroHeight = window.innerHeight * 1.05 - 100;
-        const fadeStart = heroHeight * 0.25;
-        const fadeEnd = heroHeight * 0.8;
+        const fadeStart = heroHeight * 0.4;
+        const fadeEnd = heroHeight * 0.95;
         const progress = Math.min(1, Math.max(0, (scrolled - fadeStart) / (fadeEnd - fadeStart)));
         const opacity = 1 - progress;
         containerRef.current.style.opacity = opacity.toString();
