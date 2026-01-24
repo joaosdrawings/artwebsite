@@ -93,7 +93,7 @@ export default function EventsSchedule() {
   return (
     <div className="calendar-bg-wrapper">
       <div aria-hidden="true" className="calendar-bg-gradient" />
-      <section id="events" className="py-16 px-8 max-w-6xl mx-auto calendar-content-wrapper">
+      <section id="events" className="py-16 px-8 max-w-6xl mx-auto calendar-content-wrapper" style={{scrollMarginTop: '120px'}}>
         <h2 className="text-3xl font-bold text-center mb-12" style={{ color: 'var(--salmon)', textTransform: 'uppercase' }}>Convention Schedule</h2>
         {/* Mobile/Tablet header image */}
         <div className="flex justify-center mb-8 md:hidden">

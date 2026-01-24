@@ -22,8 +22,8 @@ export default function DynamicHeader() {
   return (
     <>
       <header className={`sticky top-0 z-[100] transition-all duration-500 flex justify-between items-center text-white p-4 ${
-        isScrolled ? 'md:bg-[#FAF9F6] md:shadow-lg' : 'md:p-8'
-      }`} style={{color: isScrolled ? '#2C2C2C' : 'white', borderBottom: isScrolled ? '2px solid #FFE8D6' : 'none'}}>
+        isScrolled ? 'md:bg-[#FAF9F6]' : 'md:p-8'
+      }`} style={{color: isScrolled ? '#2C2C2C' : 'white'}}>
         {/* Logo */}
         <a href="/" className="flex items-center transition-transform hover:scale-105 duration-300">
           <Image 
@@ -68,7 +68,7 @@ export default function DynamicHeader() {
             onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#FFE8D6'}
             onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
           >
-            Convention Tables
+            Past Events
           </a>
           <a 
             href="#events" 
@@ -182,7 +182,7 @@ export default function DynamicHeader() {
                 style={{color: '#2C2C2C', cursor: 'pointer'}}
                 onClick={(e) => { e.preventDefault(); document.getElementById('past-conventions')?.scrollIntoView({ behavior: 'smooth' }); setIsMobileMenuOpen(false); }}
               >
-                Convention Tables
+                Past Events
               </a>
               <a 
                 href="#events" 

@@ -79,7 +79,7 @@ export default function HomeClient({ galleryImages, conventionTableImages }: Hom
         }}
       >
         {/* Gallery Section - replaces illustration section */}
-        <section id="gallery" className="py-16">
+        <section id="gallery" className="py-16" style={{scrollMarginTop: '120px'}}>
           <div className="text-center mb-8 px-4">
             <h2 
               className="text-4xl md:text-5xl font-bold mb-4" 
@@ -92,7 +92,7 @@ export default function HomeClient({ galleryImages, conventionTableImages }: Hom
         </section>
 
         {/* Past Convention Tables Section */}
-        <section id="past-conventions" className="py-16">
+        <section id="past-conventions" className="py-16" style={{scrollMarginTop: '120px'}}>
           <div className="text-center mb-8 px-4">
             <h2 
               className="text-4xl md:text-5xl font-bold mb-4" 
@@ -111,35 +111,48 @@ export default function HomeClient({ galleryImages, conventionTableImages }: Hom
 
         <InstagramFeed />
 
-        <footer id="contact" className="py-16 px-8" style={{backgroundColor: '#F0EAD6'}}>
+        <footer id="contact" className="py-16 px-8" style={{backgroundColor: '#F0EAD6', scrollMarginTop: '120px'}}>
           <div className="max-w-6xl mx-auto">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-12">
               {/* About Section */}
-              <div>
-                <h3 className="text-3xl font-bold mb-6">About Mo</h3>
-                <p className="text-lg mb-4">
-                  Mo is a US based artist born in California. Mo specializes in highly detailed character work of characters from anime, manga, and video game fandoms as well as original characters.
+              <div className="space-y-4">
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="w-8 h-1 rounded-full" style={{backgroundColor: '#FF7E70'}}></div>
+                  <h3 className="text-3xl font-bold" style={{color: '#2C2C2C'}}>About Mo</h3>
+                </div>
+                <p className="text-lg leading-relaxed" style={{color: '#4A4A4A'}}>
+                  Mo is a <span className="font-semibold" style={{color: '#FF7E70'}}>US-based artist</span> specializing in highly detailed character work from anime, manga, and video game fandoms — as well as original characters.
                 </p>
               </div>
 
               {/* Contact Section */}
-              <div>
-                <h3 className="text-3xl font-bold mb-6">Contact</h3>
-                <p className="text-lg mb-4">
-                  <a href="mailto:JOAOSDRAWINGS@GMAIL.COM" style={{color: '#FF7E70'}}>JOAOSDRAWINGS@GMAIL.COM</a>
-                </p>
-                <p className="mb-4">
-                  For business inquiries, please reach out via email with details about your project.
-                </p>
-                <p>※English/日本語 = OK!</p>
+              <div className="space-y-4">
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="w-8 h-1 rounded-full" style={{backgroundColor: '#FF7E70'}}></div>
+                  <h3 className="text-3xl font-bold" style={{color: '#2C2C2C'}}>Contact</h3>
+                </div>
+                <div className="space-y-3">
+                  <a 
+                    href="mailto:JOAOSDRAWINGS@GMAIL.COM" 
+                    className="text-xl font-semibold block transition-colors hover:opacity-80"
+                    style={{color: '#FF7E70'}}
+                  >
+                    JOAOSDRAWINGS@GMAIL.COM
+                  </a>
+                  <p className="leading-relaxed" style={{color: '#4A4A4A'}}>
+                    For business inquiries, commissions, and collaborations.
+                  </p>
+                </div>
               </div>
             </div>
 
             {/* Social Media & Copyright */}
             <div className="border-t pt-8" style={{borderColor: '#E8DCC4'}}>
               <div className="flex flex-col md:flex-row justify-between items-center gap-6 mb-4">
-                <div className="text-sm">ART & DESIGN © 2026 Moita Artwork. All rights reserved.</div>
-                <div className="flex space-x-4">
+                <div className="text-sm" style={{color: '#666'}}>
+                  © 2026 <span className="font-semibold" style={{color: '#2C2C2C'}}>Moita Artwork</span>. All rights reserved.
+                </div>
+                <div className="flex space-x-3">
                   <a href="https://www.pixiv.net/en/users/81398708" target="_blank" rel="noopener noreferrer" className="transition-transform hover:scale-110">
                     <img src="/images/socials/pixiv.png" alt="Pixiv" className="w-10 h-10 rounded-lg" />
                   </a>
@@ -157,7 +170,7 @@ export default function HomeClient({ galleryImages, conventionTableImages }: Hom
                   </a>
                 </div>
               </div>
-              <div className="text-sm text-gray-500 text-center md:text-left">
+              <div className="text-xs text-center md:text-left" style={{color: '#999'}}>
                 Characters & relevant concepts in fanwork pieces belong to their respective owners.
               </div>
             </div>
