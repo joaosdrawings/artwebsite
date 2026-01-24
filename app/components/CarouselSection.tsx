@@ -286,8 +286,8 @@ export default function CarouselSection({ id, title, images, onModalChange }: Ca
               }`}
               style={{
                 objectFit: 'contain',
-                filter: imageLoaded ? 'blur(0px)' : 'blur(20px)',
-                transition: 'filter 0.3s ease-out, opacity 0.35s ease'
+                filter: 'blur(0px)',
+                transition: 'opacity 0.35s ease'
               }}
               onLoad={() => setImageLoaded(true)}
             />

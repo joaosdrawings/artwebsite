@@ -223,8 +223,8 @@ export default function Gallery({ images, onModalChange }: GalleryProps) {
                 isInitialLoad && imageLoaded ? 'scale-100 opacity-100' : isInitialLoad ? 'scale-0 opacity-0' : 'scale-100 opacity-100'
               }`}
               style={{
-                filter: imageLoaded ? 'blur(0px)' : 'blur(20px)',
-                transition: 'filter 0.3s ease-out, opacity 0.35s ease'
+                filter: 'blur(0px)',
+                transition: 'opacity 0.35s ease'
               }}
               onLoad={() => setImageLoaded(true)}
             />
