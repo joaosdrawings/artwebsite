@@ -26,35 +26,35 @@ export default function Gallery({ images, onModalChange }: GalleryProps) {
   const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
   const preloadedRef = useRef(new Set<number>());
 
+  const preloadImage = useCallback((index: number) => {
+    if (preloadedRef.current.has(index)) return;
+    const image = images[index];
+    if (!image) return;
+    const img = new window.Image();
+    img.src = image.src;
+    preloadedRef.current.add(index);
+    if (typeof img.decode === 'function') {
+      img.decode().catch(() => undefined);
+    }
+  }, [images]);
+
   // Preload images in background after page load
   useEffect(() => {
     // Wait for page to be idle, then preload images
     const timer = setTimeout(() => {
       if ('requestIdleCallback' in window) {
         requestIdleCallback(() => {
-          images.forEach((image, index) => {
-            if (!preloadedRef.current.has(index)) {
-              const img = new window.Image();
-              img.src = image.src;
-              preloadedRef.current.add(index);
-            }
-          });
+          images.forEach((_, index) => preloadImage(index));
         });
       } else {
         // Fallback for browsers without requestIdleCallback
         setTimeout(() => {
-          images.forEach((image, index) => {
-            if (!preloadedRef.current.has(index)) {
-              const img = new window.Image();
-              img.src = image.src;
-              preloadedRef.current.add(index);
-            }
-          });
+          images.forEach((_, index) => preloadImage(index));
         }, 2000);
       }
     }, 1000);
     return () => clearTimeout(timer);
-  }, [images]);
+  }, [images, preloadImage]);
 
   const handleImageLoad = (index: number) => {
     setLoadedImages(prev => {
@@ -65,6 +65,7 @@ export default function Gallery({ images, onModalChange }: GalleryProps) {
   };
 
   const openLightbox = (index: number) => {
+    preloadImage(index);
     setSelectedImage(index);
     setShowModal(true);
     // Lightbox opens with preloaded images; no loading state needed
@@ -90,6 +91,15 @@ export default function Gallery({ images, onModalChange }: GalleryProps) {
     setSelectedImage(newIndex);
     // Don't reset loading state - image is already preloaded
   }, [selectedImage, images.length]);
+
+  useEffect(() => {
+    if (!showModal || selectedImage === null) return;
+    const prevIndex = selectedImage > 0 ? selectedImage - 1 : images.length - 1;
+    const nextIndex = selectedImage < images.length - 1 ? selectedImage + 1 : 0;
+    preloadImage(selectedImage);
+    preloadImage(prevIndex);
+    preloadImage(nextIndex);
+  }, [showModal, selectedImage, images.length, preloadImage]);
 
   // Keyboard navigation
   useEffect(() => {
@@ -257,6 +267,8 @@ export default function Gallery({ images, onModalChange }: GalleryProps) {
                 transition: 'none'
               }}
               priority
+              loading="eager"
+              fetchPriority="high"
               
             />
             
