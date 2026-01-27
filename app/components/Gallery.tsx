@@ -413,11 +413,12 @@ export default function Gallery({ images, onModalChange }: GalleryProps) {
 
         .tps-section {
           width: 100%;
-          min-height: 70vh;
+          height: 60vh;
           perspective: 1000px;
           perspective-origin: 50% 50%;
           transform-style: preserve-3d;
-          margin-bottom: 100px;
+          margin-bottom: 20px;
+          padding: 0;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -444,6 +445,7 @@ export default function Gallery({ images, onModalChange }: GalleryProps) {
           position: relative;
           cursor: pointer;
           width: 100%;
+          height: 100%;
           background: #fff;
           border-radius: 8px;
           overflow: hidden;
@@ -468,7 +470,8 @@ export default function Gallery({ images, onModalChange }: GalleryProps) {
         }
 
         .wide-img {
-          max-height: 70vh;
+          max-height: 100%;
+          max-width: 100%;
           object-fit: contain;
         }
 
@@ -497,8 +500,8 @@ export default function Gallery({ images, onModalChange }: GalleryProps) {
 
         @media (max-width: 768px) {
           .tps-section {
-            min-height: 50vh;
-            margin-bottom: 60px;
+            height: 50vh;
+            margin-bottom: 10px;
           }
 
           .tps-wrapper-pair {
