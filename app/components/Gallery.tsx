@@ -25,6 +25,7 @@ export default function Gallery({ images, onModalChange }: GalleryProps) {
   const [inView, setInView] = useState<boolean[]>(new Array(images.length).fill(false));
   const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
   const preloadedRef = useRef(new Set<number>());
+  const sectionRefs = useRef<(HTMLElement | null)[]>([]);
 
   // Preload images in background after page load
   useEffect(() => {
@@ -180,36 +181,146 @@ export default function Gallery({ images, onModalChange }: GalleryProps) {
     };
   }, [showModal]);
 
-  // No perspective row alternation / depth mapping
+  // Tilted page scroll effect
+  useEffect(() => {
+    const handleScroll = () => {
+      const st = window.pageYOffset;
+      const wh = window.innerHeight;
+
+      sectionRefs.current.forEach((section) => {
+        if (!section) return;
+
+        const wrapper = section.querySelector('.tps-wrapper') as HTMLElement;
+        const containers = section.querySelectorAll('.page_container');
+        if (!wrapper || containers.length === 0) return;
+
+        const sectionTop = section.offsetTop;
+        const sectionHeight = section.offsetHeight;
+
+        // Calculate transforms based on scroll position
+        let deg = ((sectionTop - sectionHeight) - st) / wh * 60; // angle multiplier
+        let scale = ((st + wh - (sectionTop - sectionHeight)) / wh);
+        let opacity = 1;
+        let containerOpacity = 1;
+
+        if (scale > 1) scale = 1;
+        if (deg < 0) deg = 0;
+
+        // When section is above viewport (scrolled past)
+        if (st > sectionTop) {
+          opacity = ((sectionTop + (wh * 1.2) - st)) / wh;
+          containerOpacity = opacity;
+          opacity = Math.pow(opacity, 25);
+          containerOpacity = Math.pow(containerOpacity, 25);
+          deg = (sectionTop - st) / wh * 60;
+          scale = ((st + wh - sectionTop) / wh);
+        } else {
+          // Section is coming into view from below
+          opacity = ((st + wh - sectionTop + (sectionHeight / 2)) / wh);
+          containerOpacity = opacity / 2;
+          containerOpacity = containerOpacity < 0.4 ? containerOpacity / 2 : containerOpacity;
+          if (opacity > 1) {
+            opacity = 1;
+            containerOpacity = 1;
+          }
+        }
+
+        if (scale > 1) scale = 1;
+        if (scale < 0.8) scale = 0.8;
+
+        // Apply transforms to wrapper
+        wrapper.style.transform = `rotateX(${deg}deg) scale(${scale})`;
+        wrapper.style.opacity = opacity.toString();
+        
+        // Apply opacity to all containers in this section
+        containers.forEach((container) => {
+          (container as HTMLElement).style.opacity = containerOpacity.toString();
+        });
+      });
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll(); // Initial call
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [images]);
 
   return (
     <>
       {/* Pixelate filter removed */}
-      <div className="masonry-gallery">
-        {images.map((image, index) => (
-          <div
-            key={index}
-            ref={(el) => { itemRefs.current[index] = el; }}
-            data-index={index}
-            className={`masonry-item ${loadedImages[index] ? 'loaded' : ''} ${inView[index] ? 'in-view' : ''} ${image.isLandscape ? 'landscape' : 'portrait'}`}
-            onClick={() => openLightbox(index)}
-          >
-            <figure>
-              <div className="image__container">
-                <Image
-                  src={image.src}
-                  alt={image.alt}
-                  fill
-                  sizes="100vw"
-                  onLoad={() => handleImageLoad(index)}
-                  className="gallery-image"
-                  style={{ objectFit: 'cover', objectPosition: 'center' }}
-                />
-              </div>
-              <figcaption>{image.src.split('/').pop()?.replace(/\.jpg$/i, '')}</figcaption>
-            </figure>
-          </div>
-        ))}
+      <div className="gallery-main">
+        {(() => {
+          const sections = [];
+          let sectionIndex = 0;
+          let i = 0;
+          
+          // Clear refs before rebuilding
+          sectionRefs.current = [];
+          
+          while (i < images.length) {
+            const img = images[i];
+            const isWide = img.width > img.height;
+            const currentSectionIndex = sectionIndex;
+            
+            if (isWide) {
+              // Wide image: takes full width section
+              sections.push(
+                <section className="tps-section" key={`section-${currentSectionIndex}`} ref={(el) => { sectionRefs.current[currentSectionIndex] = el; }}>
+                  <div className="tps-wrapper">
+                    <div className="page_container" onClick={() => openLightbox(i)}>
+                      <Image
+                        src={img.src}
+                        alt={img.alt}
+                        width={img.width}
+                        height={img.height}
+                        className="gallery-img wide-img"
+                        onLoad={() => handleImageLoad(i)}
+                      />
+                      <div className="img-caption">
+                        {img.src.split('/').pop()?.replace(/\.jpg$/i, '')}
+                      </div>
+                    </div>
+                  </div>
+                </section>
+              );
+              i++;
+            } else {
+              // Tall images: group in pairs of 2
+              const pair = [];
+              pair.push(i);
+              if (i + 1 < images.length && images[i + 1].width <= images[i + 1].height) {
+                pair.push(i + 1);
+              }
+              
+              sections.push(
+                <section className="tps-section" key={`section-${currentSectionIndex}`} ref={(el) => { sectionRefs.current[currentSectionIndex] = el; }}>
+                  <div className="tps-wrapper tps-wrapper-pair">
+                    {pair.map((imgIdx) => (
+                      <div className="page_container page_container-tall" key={imgIdx} onClick={() => openLightbox(imgIdx)}>
+                        <Image
+                          src={images[imgIdx].src}
+                          alt={images[imgIdx].alt}
+                          width={images[imgIdx].width}
+                          height={images[imgIdx].height}
+                          className="gallery-img tall-img"
+                          onLoad={() => handleImageLoad(imgIdx)}
+                        />
+                        <div className="img-caption">
+                          {images[imgIdx].src.split('/').pop()?.replace(/\.jpg$/i, '')}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </section>
+              );
+              i += pair.length;
+            }
+            sectionIndex++;
+          }
+          return sections;
+        })()}
       </div>
 
       {/* Modal - same as CarouselSection */}
@@ -293,152 +404,112 @@ export default function Gallery({ images, onModalChange }: GalleryProps) {
       )}
 
       <style jsx>{`
-        .masonry-gallery {
-          display: grid;
-          grid-template-columns: 1fr;
-          gap: 20px;
-          padding: 40px 20px;
+        .gallery-main {
+          width: 100%;
           max-width: 1400px;
           margin: 0 auto;
+          padding: 0 20px;
         }
 
-        /* Ensure tiles have height at all breakpoints */
-        .masonry-item.portrait {
-          aspect-ratio: 2 / 3;
+        .tps-section {
+          width: 100%;
+          min-height: 70vh;
+          perspective: 1000px;
+          perspective-origin: 50% 50%;
+          transform-style: preserve-3d;
+          margin-bottom: 100px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
         }
 
-        .masonry-item.landscape {
-          aspect-ratio: 3 / 2;
+        .tps-wrapper {
+          width: 100%;
+          max-width: 100%;
+          border-radius: 8px;
+          overflow: hidden;
+          transform-style: preserve-3d;
+          backface-visibility: hidden;
+          will-change: transform, opacity;
         }
 
-        @media (min-width: 640px) {
-          .masonry-gallery {
-            grid-template-columns: repeat(2, 1fr);
-          }
+        .tps-wrapper-pair {
+          display: flex;
+          gap: 2rem;
+          justify-content: center;
+          align-items: flex-start;
         }
 
-        @media (min-width: 1024px) {
-          .masonry-gallery {
-            /* Use 6 columns: 3 cols for tall images (2 cols each), 3 cols for wide pairs (3 cols each) */
-            grid-template-columns: repeat(6, 1fr);
-            /* Let height be determined by aspect ratio */
-            grid-auto-rows: auto;
-            grid-auto-flow: dense;
-          }
-
-          /* Portrait/tall images span 2 columns (equivalent to 1 of 3 original columns) */
-          .masonry-item.portrait {
-            grid-column: span 2;
-          }
-
-          /* Landscape/wide images span 3 columns (1/2 of a row when paired) */
-          .masonry-item.landscape {
-            grid-column: span 3;
-          }
-        }
-
-        .masonry-item {
+        .page_container {
+          position: relative;
           cursor: pointer;
-          opacity: 0;
-          transform: translateY(24px);
-          transition: opacity 0.6s ease, transform 0.6s ease;
-          overflow: hidden;
-          position: relative;
-          will-change: transform;
-        }
-
-        .masonry-item.in-view {
-          opacity: 1;
-          transform: translateY(0);
-        }
-
-        .masonry-item:hover {
-          z-index: 10;
-        }
-
-        figure {
+          width: 100%;
           background: #fff;
-          transition: all 140ms ease;
-          padding: 0.5rem;
-          height: 100%;
-          position: relative;
-        }
-
-        .image__container {
-          position: absolute;
-          inset: 0;
-          display: grid;
-          grid-template-columns: repeat(8, 1fr);
-          grid-template-rows: repeat(16, 1fr);
+          border-radius: 8px;
           overflow: hidden;
+          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+          transition: box-shadow 300ms ease;
+          will-change: opacity;
         }
 
-        /* Removed pixelate overlay pseudo-elements */
+        .page_container:hover {
+          box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+        }
 
-        /* Variant animations removed */
+        .page_container-tall {
+          flex: 1;
+          max-width: 500px;
+        }
 
-        .gallery-image {
+        .gallery-img {
+          width: 100%;
+          height: auto;
           display: block;
-          grid-column: -1 / 1;
-          grid-row: -1 / 1;
         }
 
-        .masonry-item::before {
-          content: "";
-          position: absolute;
-          inset: 0;
-          background: #212121;
-          transition: transform 140ms ease, opacity 140ms ease, filter 140ms ease;
+        .wide-img {
+          max-height: 70vh;
+          object-fit: contain;
         }
 
-        .masonry-item::after {
-          content: "";
-          position: absolute;
-          inset: 0;
-          transition: opacity 140ms ease;
-          opacity: 0;
+        .tall-img {
+          object-fit: cover;
         }
 
-        .masonry-item figcaption {
+        .img-caption {
           position: absolute;
-          bottom: 1em;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          background: rgba(0, 0, 0, 0.6);
           backdrop-filter: blur(10px);
-          color: #fff;
-          clip-path: polygon(0 100%, 0 100%, 100% 100%, 100% 100%);
-          padding: 0.5em;
-          font-size: clamp(12px, 2.2vw, 16px);
-          translate: 0.5em;
-          transform: translateY(1em);
-          transition: transform 240ms ease, clip-path 240ms ease, box-shadow 240ms ease;
-          z-index: 2;
-          pointer-events: none;
+          color: white;
+          padding: 1rem;
+          text-align: center;
+          font-size: 14px;
+          transform: translateY(100%);
+          transition: transform 300ms ease;
         }
 
-        /* Hover effects */
-        .masonry-item:hover::before {
-          transform: translate(-6%, 0%);
-          opacity: 0.3;
-          filter: blur(3px);
-        }
-        .masonry-item.frame-variant-b:hover::before {
-          transform: translate(6%, 0%);
-        }
-        /* Pixelate hover overlays removed */
-        .masonry-item.in-view figure {
+        .page_container:hover .img-caption {
           transform: translateY(0);
         }
-        .masonry-item:hover figure {
-          transform: translateY(0) scale(1.05);
-        }
-        .masonry-item:hover figcaption {
-          transform: translateY(0);
-          box-shadow: inset 0 0 0 1px #000;
-          clip-path: polygon(0 0, 0 100%, 100% 100%, 100% 0);
-        }
 
-        /* Keyframes removed */
+        @media (max-width: 768px) {
+          .tps-section {
+            min-height: 50vh;
+            margin-bottom: 60px;
+          }
 
-        /* Depth classes removed */
+          .tps-wrapper-pair {
+            flex-direction: column;
+            gap: 1rem;
+          }
+
+          .page_container-tall {
+            max-width: 100%;
+          }
+        }
       `}</style>
     </>
   );
