@@ -30,6 +30,23 @@
   margin-left: -50px;
 }
 
+/* Hero arrow styling and bounce animation */
+.hero-arrow {
+  color: var(--salmon);
+  animation: hero-bounce 1.6s ease-in-out infinite;
+}
+
+@keyframes hero-bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* (Reverted) Illustration gallery framed effect removed */
+
 .ring-right span, .ring-left span {
     background-color: rgb(100, 100, 100)!important;
 }

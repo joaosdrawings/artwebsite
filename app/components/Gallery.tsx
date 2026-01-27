@@ -20,8 +20,6 @@ export default function Gallery({ images, onModalChange }: GalleryProps) {
   const [loadedImages, setLoadedImages] = useState<boolean[]>(new Array(images.length).fill(false));
   const [selectedImage, setSelectedImage] = useState<number | null>(null);
   const [showModal, setShowModal] = useState(false);
-  const [imageLoaded, setImageLoaded] = useState(true);
-  const [isInitialLoad, setIsInitialLoad] = useState(false);
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
   const [inView, setInView] = useState<boolean[]>(new Array(images.length).fill(false));
@@ -69,8 +67,7 @@ export default function Gallery({ images, onModalChange }: GalleryProps) {
   const openLightbox = (index: number) => {
     setSelectedImage(index);
     setShowModal(true);
-    setImageLoaded(true); // Images are now preloaded, so mark as loaded immediately
-    setIsInitialLoad(false);
+    // Lightbox opens with preloaded images; no loading state needed
     onModalChange?.(true);
   };
 
@@ -183,26 +180,34 @@ export default function Gallery({ images, onModalChange }: GalleryProps) {
     };
   }, [showModal]);
 
+  // No perspective row alternation / depth mapping
+
   return (
     <>
+      {/* Pixelate filter removed */}
       <div className="masonry-gallery">
         {images.map((image, index) => (
           <div
             key={index}
             ref={(el) => { itemRefs.current[index] = el; }}
             data-index={index}
-            className={`masonry-item hover-zoom ${loadedImages[index] ? 'loaded' : ''} ${inView[index] ? 'in-view' : ''} ${image.isLandscape ? 'landscape' : 'portrait'}`}
+            className={`masonry-item ${loadedImages[index] ? 'loaded' : ''} ${inView[index] ? 'in-view' : ''} ${image.isLandscape ? 'landscape' : 'portrait'}`}
             onClick={() => openLightbox(index)}
           >
-            <Image
-              src={image.src}
-              alt={image.alt}
-              fill
-              sizes="100vw"
-              onLoad={() => handleImageLoad(index)}
-              className="gallery-image"
-              style={{ objectFit: 'cover', objectPosition: 'center' }}
-            />
+            <figure>
+              <div className="image__container">
+                <Image
+                  src={image.src}
+                  alt={image.alt}
+                  fill
+                  sizes="100vw"
+                  onLoad={() => handleImageLoad(index)}
+                  className="gallery-image"
+                  style={{ objectFit: 'cover', objectPosition: 'center' }}
+                />
+              </div>
+              <figcaption>{image.src.split('/').pop()?.replace(/\.jpg$/i, '')}</figcaption>
+            </figure>
           </div>
         ))}
       </div>
@@ -252,7 +257,7 @@ export default function Gallery({ images, onModalChange }: GalleryProps) {
                 transition: 'none'
               }}
               priority
-              onLoad={() => setImageLoaded(true)}
+              
             />
             
             {/* Left Arrow */}
@@ -339,6 +344,7 @@ export default function Gallery({ images, onModalChange }: GalleryProps) {
           transition: opacity 0.6s ease, transform 0.6s ease;
           overflow: hidden;
           position: relative;
+          will-change: transform;
         }
 
         .masonry-item.in-view {
@@ -350,9 +356,89 @@ export default function Gallery({ images, onModalChange }: GalleryProps) {
           z-index: 10;
         }
 
+        figure {
+          background: #fff;
+          transition: all 140ms ease;
+          padding: 0.5rem;
+          height: 100%;
+          position: relative;
+        }
+
+        .image__container {
+          position: absolute;
+          inset: 0;
+          display: grid;
+          grid-template-columns: repeat(8, 1fr);
+          grid-template-rows: repeat(16, 1fr);
+          overflow: hidden;
+        }
+
+        /* Removed pixelate overlay pseudo-elements */
+
+        /* Variant animations removed */
+
         .gallery-image {
           display: block;
+          grid-column: -1 / 1;
+          grid-row: -1 / 1;
         }
+
+        .masonry-item::before {
+          content: "";
+          position: absolute;
+          inset: 0;
+          background: #212121;
+          transition: transform 140ms ease, opacity 140ms ease, filter 140ms ease;
+        }
+
+        .masonry-item::after {
+          content: "";
+          position: absolute;
+          inset: 0;
+          transition: opacity 140ms ease;
+          opacity: 0;
+        }
+
+        .masonry-item figcaption {
+          position: absolute;
+          bottom: 1em;
+          backdrop-filter: blur(10px);
+          color: #fff;
+          clip-path: polygon(0 100%, 0 100%, 100% 100%, 100% 100%);
+          padding: 0.5em;
+          font-size: clamp(12px, 2.2vw, 16px);
+          translate: 0.5em;
+          transform: translateY(1em);
+          transition: transform 240ms ease, clip-path 240ms ease, box-shadow 240ms ease;
+          z-index: 2;
+          pointer-events: none;
+        }
+
+        /* Hover effects */
+        .masonry-item:hover::before {
+          transform: translate(-6%, 0%);
+          opacity: 0.3;
+          filter: blur(3px);
+        }
+        .masonry-item.frame-variant-b:hover::before {
+          transform: translate(6%, 0%);
+        }
+        /* Pixelate hover overlays removed */
+        .masonry-item.in-view figure {
+          transform: translateY(0);
+        }
+        .masonry-item:hover figure {
+          transform: translateY(0) scale(1.05);
+        }
+        .masonry-item:hover figcaption {
+          transform: translateY(0);
+          box-shadow: inset 0 0 0 1px #000;
+          clip-path: polygon(0 0, 0 100%, 100% 100%, 100% 0);
+        }
+
+        /* Keyframes removed */
+
+        /* Depth classes removed */
       `}</style>
     </>
   );

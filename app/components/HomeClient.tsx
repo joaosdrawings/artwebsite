@@ -102,6 +102,7 @@ export default function HomeClient({ galleryImages, conventionTableImages }: Hom
           pointerEvents: 'none'
         }}
       >
+        <div className="relative z-10">
         {/* Gallery Section - replaces illustration section */}
         <section id="gallery" className="py-16" style={{scrollMarginTop: '120px'}}>
           <div className="text-center mb-8 px-4">
@@ -200,6 +201,7 @@ export default function HomeClient({ galleryImages, conventionTableImages }: Hom
             </div>
           </div>
         </footer>
+        </div>
       </div>
     </div>
   );

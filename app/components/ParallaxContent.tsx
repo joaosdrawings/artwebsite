@@ -247,40 +247,29 @@ export default function ParallaxContent() {
         />
       </div>
 
-      {/* Morphing Arrow */}
+      {/* Downward arrow indicator (center-bottom) */}
       <div
         ref={arrowRef}
-        className="absolute bottom-24 right-8 z-40 flex flex-col items-center gap-3"
+        className="pointer-events-none absolute bottom-24 left-1/2 -translate-x-1/2 z-40 flex items-center justify-center"
         style={{
           transition: 'opacity 0.3s ease-out',
           filter: 'drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3))'
         }}
       >
-        <div
-          className="font-black text-2xl bouncing-text"
-          style={{
-            writingMode: 'vertical-rl',
-            color: '#FFFFFF'
-          }}
-        >
-          <span className="hidden lg:inline">SCROLL FOR MORE</span>
-          <span className="lg:hidden">SWIPE FOR MORE</span>
-        </div>
         <svg
           ref={svgRef}
-          className="arrow animated-arrow"
+          className="hero-arrow"
           xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 70 85"
+          viewBox="0 0 24 24"
           fill="none"
-          style={{ width: '80px', height: '80px', transform: 'scaleX(-1)' }}
+          width="56"
+          height="56"
+          stroke="currentColor"
+          strokeWidth="2.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         >
-          <path
-            stroke="none"
-            strokeWidth="3"
-            fill="none"
-            id="path"
-            d="M6.6 1.8C.2 37 2.8 55.8 37.4 47 72.4 39.4 53.8 5.4 33.2 22 11 41.6 17.4 69.8 29.4 83.4M29.4 83.4 32.6 74.2M29.4 83.4 19.8 79.8"
-          ></path>
+          <polyline points="6 10 12 16 18 10"></polyline>
         </svg>
       </div>
     </div>
