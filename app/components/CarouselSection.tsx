@@ -23,33 +23,33 @@ export default function CarouselSection({ id, title, images, onModalChange }: Ca
   const [loadedThumbnails, setLoadedThumbnails] = useState<Set<number>>(new Set());
   const preloadedRef = useRef(new Set<number>());
 
+  const preloadImage = useCallback((index: number) => {
+    if (preloadedRef.current.has(index)) return;
+    const imageSrc = images[index];
+    if (!imageSrc) return;
+    const img = new window.Image();
+    img.src = imageSrc;
+    preloadedRef.current.add(index);
+    if (typeof img.decode === 'function') {
+      img.decode().catch(() => undefined);
+    }
+  }, [images]);
+
   // Preload images in background after page load
   useEffect(() => {
     const timer = setTimeout(() => {
       if ('requestIdleCallback' in window) {
         requestIdleCallback(() => {
-          images.forEach((image, index) => {
-            if (!preloadedRef.current.has(index) && image) {
-              const img = new window.Image();
-              img.src = image;
-              preloadedRef.current.add(index);
-            }
-          });
+          images.forEach((_, index) => preloadImage(index));
         });
       } else {
         setTimeout(() => {
-          images.forEach((image, index) => {
-            if (!preloadedRef.current.has(index) && image) {
-              const img = new window.Image();
-              img.src = image;
-              preloadedRef.current.add(index);
-            }
-          });
+          images.forEach((_, index) => preloadImage(index));
         }, 2000);
       }
     }, 1000);
     return () => clearTimeout(timer);
-  }, [images]);
+  }, [images, preloadImage]);
 
   const colors = [
     'bg-gray-300',
@@ -105,6 +105,7 @@ export default function CarouselSection({ id, title, images, onModalChange }: Ca
   }, [images]);
 
   const openModal = (imageSrc: string, index: number) => {
+    preloadImage(index);
     setSelectedImage(imageSrc);
     setCurrentImageIndex(index);
     setShowModal(true);
@@ -131,15 +132,17 @@ export default function CarouselSection({ id, title, images, onModalChange }: Ca
 
   const goToPrevious = useCallback(() => {
     const newIndex = currentImageIndex > 0 ? currentImageIndex - 1 : images.length - 1;
+    preloadImage(newIndex);
     setCurrentImageIndex(newIndex);
     setSelectedImage(images[newIndex] || `/images/placeholder-${newIndex + 1}.jpg`);
-  }, [currentImageIndex, images]);
+  }, [currentImageIndex, images, preloadImage]);
 
   const goToNext = useCallback(() => {
     const newIndex = currentImageIndex < images.length - 1 ? currentImageIndex + 1 : 0;
+    preloadImage(newIndex);
     setCurrentImageIndex(newIndex);
     setSelectedImage(images[newIndex] || `/images/placeholder-${newIndex + 1}.jpg`);
-  }, [currentImageIndex, images]);
+  }, [currentImageIndex, images, preloadImage]);
 
   // Keyboard navigation
   useEffect(() => {
@@ -170,6 +173,16 @@ export default function CarouselSection({ id, title, images, onModalChange }: Ca
       document.removeEventListener('keydown', handleKeyDown);
     };
   }, [showModal, goToPrevious, goToNext, closeModal]);
+
+  // Preload adjacent images when modal is open
+  useEffect(() => {
+    if (!showModal) return;
+    const prevIndex = currentImageIndex > 0 ? currentImageIndex - 1 : images.length - 1;
+    const nextIndex = currentImageIndex < images.length - 1 ? currentImageIndex + 1 : 0;
+    preloadImage(currentImageIndex);
+    preloadImage(prevIndex);
+    preloadImage(nextIndex);
+  }, [showModal, currentImageIndex, images.length, preloadImage]);
 
   // Touch handlers for swipe
   const handleTouchStart = (e: React.TouchEvent) => {
@@ -314,6 +327,9 @@ export default function CarouselSection({ id, title, images, onModalChange }: Ca
                 filter: 'blur(0px)',
                 transition: 'none'
               }}
+              priority
+              loading="eager"
+              fetchPriority="high"
               onLoad={() => setImageLoaded(true)}
             />
             

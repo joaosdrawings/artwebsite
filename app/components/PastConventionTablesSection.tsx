@@ -38,6 +38,19 @@ export default function PastConventionTablesSection({ onModalChange }: { onModal
   // Parallax effect for yumia background
   const yumiaRef = useRef<HTMLDivElement>(null);
   const rafRef = useRef<number | null>(null);
+  const preloadedRef = useRef(new Set<number>());
+
+  const preloadImage = (index: number) => {
+    if (preloadedRef.current.has(index)) return;
+    const imageSrc = images[index];
+    if (!imageSrc) return;
+    const img = new window.Image();
+    img.src = imageSrc;
+    preloadedRef.current.add(index);
+    if (typeof img.decode === 'function') {
+      img.decode().catch(() => undefined);
+    }
+  };
 
   useEffect(() => {
     let ticking = false;
@@ -65,7 +78,24 @@ export default function PastConventionTablesSection({ onModalChange }: { onModal
     };
   }, []);
 
+  // Preload all images on mount
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if ('requestIdleCallback' in window) {
+        requestIdleCallback(() => {
+          images.forEach((_, index) => preloadImage(index));
+        });
+      } else {
+        setTimeout(() => {
+          images.forEach((_, index) => preloadImage(index));
+        }, 2000);
+      }
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, [images]);
+
   const openModal = (imageSrc: string, index: number) => {
+    preloadImage(index);
     setSelectedImage(imageSrc);
     setCurrentImageIndex(index);
     setShowModal(true);
@@ -87,14 +117,26 @@ export default function PastConventionTablesSection({ onModalChange }: { onModal
     }, [showModal]);
   const goToPrevious = () => {
     const newIndex = currentImageIndex > 0 ? currentImageIndex - 1 : images.length - 1;
+    preloadImage(newIndex);
     setCurrentImageIndex(newIndex);
     setSelectedImage(images[newIndex]);
   };
   const goToNext = () => {
     const newIndex = currentImageIndex < images.length - 1 ? currentImageIndex + 1 : 0;
+    preloadImage(newIndex);
     setCurrentImageIndex(newIndex);
     setSelectedImage(images[newIndex]);
   };
+
+  // Preload adjacent images when modal is open
+  useEffect(() => {
+    if (!showModal) return;
+    const prevIndex = currentImageIndex > 0 ? currentImageIndex - 1 : images.length - 1;
+    const nextIndex = currentImageIndex < images.length - 1 ? currentImageIndex + 1 : 0;
+    preloadImage(currentImageIndex);
+    preloadImage(prevIndex);
+    preloadImage(nextIndex);
+  }, [showModal, currentImageIndex, images.length]);
 
   return (
     <div style={{ position: 'relative', width: '100%', overflow: 'hidden' }}>
@@ -231,6 +273,9 @@ export default function PastConventionTablesSection({ onModalChange }: { onModal
                 fill
                 sizes="100vw"
                 style={{ objectFit: 'contain', boxShadow: '0 0 40px rgba(0,0,0,0.7)' }}
+                priority
+                loading="eager"
+                fetchPriority="high"
               />
             </div>
             {/* Left Arrow */}
