@@ -8,6 +8,7 @@ import Gallery from './Gallery';
 import ConventionTableGallery from './ConventionTableGallery';
 import EventsSchedule from './EventsSchedule';
 import InstagramFeed from './InstagramFeed';
+import ContactForm from './ContactForm';
 
 interface GalleryImage {
   src: string;
@@ -137,37 +138,37 @@ export default function HomeClient({ galleryImages, conventionTableImages }: Hom
         <InstagramFeed />
 
         <footer id="contact" className="py-16 px-8" style={{backgroundColor: '#F0EAD6', scrollMarginTop: '120px'}}>
-          <div className="max-w-6xl mx-auto">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-12">
-              {/* About Section */}
-              <div className="space-y-4">
-                <div className="flex items-center gap-3 mb-6">
-                  <div className="w-8 h-1 rounded-full" style={{backgroundColor: '#FF7E70'}}></div>
-                  <h3 className="text-3xl font-bold" style={{color: '#2C2C2C'}}>About Mo</h3>
-                </div>
-                <p className="text-lg leading-relaxed" style={{color: '#4A4A4A'}}>
-                  Mo is a <span className="font-semibold" style={{color: '#FF7E70'}}>US-based artist</span> specializing in highly detailed character work from anime, manga, and video game fandoms — as well as original characters.
+          <div className="max-w-6xl mx-auto space-y-16">
+            {/* About Section */}
+            <div className="space-y-4">
+              <div className="text-center mb-8">
+                <h3 className="text-4xl font-bold mb-3" style={{color: '#2C2C2C'}}>About Mo</h3>
+                <p className="text-lg" style={{color: '#64748b'}}>
+                  Learn more about my work and artistic journey.
                 </p>
               </div>
+              <p className="text-lg leading-relaxed mb-4" style={{color: '#4A4A4A'}}>
+                Mo is a <span className="font-semibold" style={{color: '#FF7E70'}}>US-based artist</span> specializing in highly detailed character work from anime, manga, and video game fandoms — as well as original characters.
+              </p>
+              <p className="text-lg leading-relaxed" style={{color: '#4A4A4A'}}>
+                Available for commissions, collaborations, and business inquiries. Use the contact form to get in touch!
+              </p>
+            </div>
 
-              {/* Contact Section */}
-              <div className="space-y-4">
-                <div className="flex items-center gap-3 mb-6">
-                  <div className="w-8 h-1 rounded-full" style={{backgroundColor: '#FF7E70'}}></div>
-                  <h3 className="text-3xl font-bold" style={{color: '#2C2C2C'}}>Contact</h3>
-                </div>
-                <div className="space-y-3">
-                  <a 
-                    href="mailto:JOAOSDRAWINGS@GMAIL.COM" 
-                    className="text-xl font-semibold block transition-colors hover:opacity-80"
-                    style={{color: '#FF7E70'}}
-                  >
-                    JOAOSDRAWINGS@GMAIL.COM
-                  </a>
-                  <p className="leading-relaxed" style={{color: '#4A4A4A'}}>
-                    For business inquiries, commissions, and collaborations.
-                  </p>
-                </div>
+            {/* Contact Form Section with white background */}
+            <div className="space-y-4">
+              <div className="text-center mb-8">
+                <h3 className="text-4xl font-bold mb-3" style={{color: '#2C2C2C'}}>Get in Touch</h3>
+                <p className="text-lg" style={{color: '#64748b'}}>
+                  I'd love to hear from you. Send me a message and I'll respond as soon as possible.
+                </p>
+              </div>
+              <div className="p-8 rounded-lg" style={{
+                backgroundColor: '#FFFFFF',
+                boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(255, 255, 255, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.8)',
+                border: '1px solid rgba(248, 250, 252, 0.8)'
+              }}>
+                <ContactForm />
               </div>
             </div>
 
