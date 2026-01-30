@@ -160,7 +160,7 @@ export default function HomeClient({ galleryImages, conventionTableImages }: Hom
               <div className="text-center mb-8">
                 <h3 className="text-4xl font-bold mb-3" style={{color: '#2C2C2C'}}>Get in Touch</h3>
                 <p className="text-lg" style={{color: '#64748b'}}>
-                  I'd love to hear from you. Send me a message and I'll respond as soon as possible.
+                  I&apos;d love to hear from you. Send me a message and I&apos;ll respond as soon as possible.
                 </p>
               </div>
               <div className="p-8 rounded-lg" style={{
