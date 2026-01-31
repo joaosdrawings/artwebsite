@@ -18,7 +18,7 @@ export const metadata: Metadata = {
   title: "ArtofMo",
   description: "Art of Mo - Digital Artist Portfolio",
   icons: {
-    icon: "/images/logo/logo2.PNG",
+    icon: "/images/logo/logo5.PNG",
   },
 };
 
