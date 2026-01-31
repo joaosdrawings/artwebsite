@@ -162,7 +162,6 @@ export default function EventsSchedule({ galleryImages }: EventsScheduleProps) {
             return (
               <CalendarMonth
                 key={monthData.month}
-                monthNumber={monthData.monthNumber}
                 month={monthData.month}
                 events={monthData.events}
                 imageSrc={imageSrc}
