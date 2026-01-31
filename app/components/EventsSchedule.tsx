@@ -1,6 +1,6 @@
 'use client';
 
-import Image from 'next/image';
+import CalendarMonth from './CalendarMonth';
 
 interface Event {
   name: string;
@@ -10,20 +10,32 @@ interface Event {
 
 interface MonthEvents {
   month: string;
-  day: string;
+  monthNumber: number;
   events: Event[];
 }
 
-export default function EventsSchedule() {
+interface GalleryImage {
+  src: string;
+  alt: string;
+  width: number;
+  height: number;
+  isLandscape?: boolean;
+}
+
+interface EventsScheduleProps {
+  galleryImages: GalleryImage[];
+}
+
+export default function EventsSchedule({ galleryImages }: EventsScheduleProps) {
   const schedule: MonthEvents[] = [
     {
       month: 'January',
-      day: '01',
+      monthNumber: 1,
       events: []
     },
     {
       month: 'February',
-      day: '01',
+      monthNumber: 2,
       events: [
         { name: 'Anime Washington 2026', dates: 'Feb 6-8', url: 'https://animewashington.com'},
         { name: 'Isekai anime con', dates: 'Feb 20-22', url: 'https://isekaianimecon.com' }
@@ -31,38 +43,38 @@ export default function EventsSchedule() {
     },
     {
       month: 'March',
-      day: '21',
+      monthNumber: 3,
       events: [
         { name: 'Anime Las Vegas', dates: 'March 21-22', url: 'https://animelasvegas.com'  }
       ]
     },
     {
       month: 'April',
-      day: '01',
+      monthNumber: 4,
       events: []
     },
     {
       month: 'May',
-      day: '15',
+      monthNumber: 5,
       events: [
         { name: 'Gem state comic con', dates: 'May 15-17', url: 'https://gemstatecomiccon.com'  }
       ]
     },
     {
       month: 'June',
-      day: '01',
+      monthNumber: 6,
       events: []
     },
     {
       month: 'July',
-      day: '25',
+      monthNumber: 7,
       events: [
         { name: 'Anime Matsuri', dates: 'July 25-26', url: 'https://animematsuri.com'  }
       ]
     },
     {
       month: 'August',
-      day: '08',
+      monthNumber: 8,
       events: [
         { name: 'Big Minneapolis Anime', dates: 'Aug 8-9', url: 'https://bigminneapolisanime.com'  },
         { name: 'Nostalgia con SLC', dates: 'Aug 15-16', url: 'https://www.thenostalgiacon.com/saltlakehome26'  }
@@ -70,93 +82,90 @@ export default function EventsSchedule() {
     },
     {
       month: 'September',
-      day: '19',
+      monthNumber: 9,
       events: [
         { name: 'Anime ID', dates: 'Sep 19-20', url: 'https://animeidaho.com'  }
       ]
     },
     {
       month: 'October',
-      day: '01',
+      monthNumber: 10,
       events: []
     },
     {
       month: 'November',
-      day: '01',
+      monthNumber: 11,
       events: []
     },
     {
       month: 'December',
-      day: '01',
+      monthNumber: 12,
       events: []
     }
   ];
 
   return (
-    <div className="calendar-bg-wrapper">
-      <div aria-hidden="true" className="calendar-bg-gradient" />
-      <section id="events" className="py-16 px-8 max-w-6xl mx-auto calendar-content-wrapper" style={{scrollMarginTop: '120px'}}>
-        <h2 className="text-3xl font-bold text-center mb-12" style={{ color: 'var(--salmon)', textTransform: 'uppercase' }}>Convention Schedule</h2>
-        {/* Mobile/Tablet header image */}
-        <div className="flex justify-center mb-8 md:hidden">
-          <Image
-            src="/images/assets/events.png"
-            alt="Events"
-            width={400}
-            height={240}
-            className="w-auto h-auto calendar-header-img"
-            priority
-          />
+    <div style={{position: 'relative', width: '100%'}}>
+      <div style={{
+        position: 'absolute',
+        top: 0,
+        left: '50%',
+        transform: 'translateX(-50%)',
+        width: '100%',
+        height: '100%',
+        zIndex: 0,
+        padding: '32px 0',
+        background: 'linear-gradient(135deg, #FAF9F6 0%, #F0EAD6 50%, #FFE8D6 100%)',
+        pointerEvents: 'none'
+      }} />
+      <svg style={{visibility:'hidden', width:0, height:0}} width="0" height="0">
+        <filter id="duotone" colorInterpolationFilters="sRGB">
+          <feColorMatrix type="matrix" values="0.7 0 0 0 0.3 0.6 0 0 0 0.2 0.3 0 0 0 0.6 0 0 0 1 0" />
+        </filter>
+      </svg>
+      <section id="events" style={{
+        position: 'relative',
+        zIndex: 1,
+        padding: '2rem',
+        scrollMarginTop: '120px'
+      }}>
+        <h2 style={{
+          fontSize: '1.875rem',
+          fontWeight: 'bold',
+          textAlign: 'center',
+          marginBottom: '3rem',
+          color: '#FF7E70',
+          textTransform: 'uppercase'
+        }}>
+          Convention Schedule
+        </h2>
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))',
+          gap: '40px',
+          justifyItems: 'center',
+          padding: '0 5%'
+        }}>
+          {schedule.map((monthData) => {
+            // Find gallery image matching month number
+            const imageSrc = galleryImages.find(img => {
+              const filename = img.src.split('/').pop() || '';
+              const num = parseInt(filename);
+              return num === monthData.monthNumber;
+            })?.src || galleryImages[0]?.src || '';
+
+            return (
+              <CalendarMonth
+                key={monthData.month}
+                monthNumber={monthData.monthNumber}
+                month={monthData.month}
+                events={monthData.events}
+                imageSrc={imageSrc}
+              />
+            );
+          })}
         </div>
-
-        <div className="grid md:grid-cols-[320px_1fr] gap-8 items-start">
-          {/* Desktop left-side full-height image */}
-          <div className="hidden md:flex">
-            <Image
-              src="/images/assets/eventsfull.png"
-              alt="Events"
-              width={520}
-              height={900}
-              className="w-full h-auto calendar-side-img"
-              priority
-            />
-          </div>
-
-          {/* Months grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {schedule.map((monthData) => (
-              <div key={monthData.month} className="calendar-card calendar-card-relative">
-                {/* Calendar Header */}
-                <header className="calendar-header">
-                  <div className="calendar-header-title">{monthData.month}</div>
-                </header>
-
-              {/* Events List */}
-              <div className="calendar-events-list">
-                {monthData.events.length > 0 ? (
-                  <div className="space-y-3">
-                    {monthData.events.map((event, index) => (
-                      <div key={index} className="pb-3 border-b last:border-b-0 calendar-event-item">
-                        {event.url ? (
-                          <a href={event.url} target="_blank" rel="noopener noreferrer" className="font-semibold mb-1 calendar-event-link">{event.name}</a>
-                        ) : (
-                          <p className="font-semibold mb-1 calendar-event-name">{event.name}</p>
-                        )}
-                        <p className="text-sm calendar-event-date">{event.dates}</p>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <p className="text-sm italic text-center calendar-no-events">No events scheduled</p>
-                )}
-              </div>
-            </div>
-          ))}
-
-        </div>
-      </div>
       </section>
     </div>
-
   );
 }

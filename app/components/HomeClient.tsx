@@ -133,7 +133,7 @@ export default function HomeClient({ galleryImages, conventionTableImages }: Hom
           <ConventionTableGallery images={conventionTableImages} onModalChange={setIsModalOpen} />
         </section>
 
-        <EventsSchedule />
+        <EventsSchedule galleryImages={galleryImages} />
 
         <InstagramFeed />
 
