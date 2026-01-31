@@ -5,6 +5,7 @@ import { useEffect, useState, useCallback, useRef } from 'react';
 
 interface GalleryImage {
   src: string;
+  previewSrc?: string;
   alt: string;
   width: number;
   height: number;
@@ -207,7 +208,7 @@ export default function Gallery({ images, onModalChange }: GalleryProps) {
             <figure>
               <div className="image__container">
                 <Image
-                  src={image.src}
+                  src={image.previewSrc || image.src}
                   alt={image.alt}
                   fill
                   sizes="100vw"
@@ -216,7 +217,7 @@ export default function Gallery({ images, onModalChange }: GalleryProps) {
                   style={{ objectFit: 'cover', objectPosition: 'center' }}
                 />
               </div>
-              <figcaption>{image.src.split('/').pop()?.replace(/\.jpg$/i, '')}</figcaption>
+              <figcaption>{image.alt}</figcaption>
             </figure>
           </div>
         ))}
