@@ -89,7 +89,7 @@ export default function CalendarMonth({ month, events, imageSrc }: CalendarMonth
         height: '100%',
         border: '10px solid #fff',
         fontFamily: "'Josefin Sans', sans-serif",
-        backgroundColor: 'rgba(0, 0, 0, 0.4)',
+        backgroundColor: 'rgba(0, 0, 0, 0.2)',
         boxSizing: 'border-box',
         zIndex: 1,
         boxShadow: '0 7px 6px 0 rgba(0, 0, 0, 0.1), 0 10px 19px 0 rgba(0, 0, 0, 0.11)'
