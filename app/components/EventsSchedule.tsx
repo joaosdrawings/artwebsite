@@ -120,14 +120,19 @@ export default function EventsSchedule({ galleryImages }: EventsScheduleProps) {
       }} />
       <svg style={{visibility:'hidden', width:0, height:0}} width="0" height="0">
         <filter id="duotone" colorInterpolationFilters="sRGB">
-          <feColorMatrix type="matrix" values="0.7 0 0 0 0.3 0.6 0 0 0 0.2 0.3 0 0 0 0.6 0 0 0 1 0" />
+          <feColorMatrix type="matrix" values="0.3 0 0 0 0.65 0.5 0 0 0 0.25 0.7 0 0 0 0.1 0 0 0 1 0" />
         </filter>
       </svg>
       <section id="events" style={{
         position: 'relative',
         zIndex: 1,
         padding: '2rem',
-        scrollMarginTop: '120px'
+        paddingBottom: 'calc(2rem + 50px)',
+        scrollMarginTop: '120px',
+        maxWidth: '1400px',
+        margin: '0 auto',
+        width: '100%',
+        boxSizing: 'border-box'
       }}>
         <h2 style={{
           fontSize: '1.875rem',
