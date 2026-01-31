@@ -10,13 +10,12 @@ interface Event {
 }
 
 interface CalendarMonthProps {
-  monthNumber: number;
   month: string;
   events: Event[];
   imageSrc: string;
 }
 
-export default function CalendarMonth({ monthNumber, month, events, imageSrc }: CalendarMonthProps) {
+export default function CalendarMonth({ month, events, imageSrc }: CalendarMonthProps) {
   const [isVisible, setIsVisible] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -95,22 +94,6 @@ export default function CalendarMonth({ monthNumber, month, events, imageSrc }: 
         zIndex: 1,
         boxShadow: '0 7px 6px 0 rgba(0, 0, 0, 0.1), 0 10px 19px 0 rgba(0, 0, 0, 0.11)'
       }}>
-        {/* Month Number Background */}
-        <h2 style={{
-          position: 'absolute',
-          top: '-0.4em',
-          left: '-0.3em',
-          margin: 0,
-          fontSize: '400px',
-          lineHeight: 1,
-          letterSpacing: 0,
-          color: '#fff',
-          opacity: 0.15,
-          fontWeight: 'bold'
-        }}>
-          {monthNumber}
-        </h2>
-
         {/* Calendar Table */}
         <table style={{
           position: 'absolute',
